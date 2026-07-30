@@ -94,6 +94,14 @@ img {
   padding: 0 24px;
 }
 
+/* Give header + hero a wider canvas on desktop */
+.nav .container,
+.hero .container {
+  max-width: 1380px;
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
 .section {
   padding: 88px 0;
 }
@@ -514,7 +522,8 @@ img {
 
 .hero-copy {
   padding: 40px 0;
-  max-width: 540px;
+  max-width: 590px;
+  justify-self: start;
 }
 
 .hero-copy.animate-in .brand-kicker {
@@ -2724,6 +2733,12 @@ img {
 }
 
 @media (max-width: 640px) {
+  .nav .container,
+  .hero .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .container {
     padding: 0 16px;
   }
