@@ -1,6 +1,3 @@
-export const notice =
-  'Notice to clients: We are currently only accepting new business from the UK, USA, Canada, Europe, Australia, New Zealand, Singapore, Turkey, Japan, South Korea, Israel, Jordan, UAE and Hong Kong. Outside these regions, applications are accepted only via an approved professional agent.'
-
 export const informationGuides = [
   {
     id: 'why-use-agent',

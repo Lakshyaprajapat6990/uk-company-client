@@ -96,8 +96,7 @@ img {
 
 /* Header + hero: full width with equal side gutters */
 .nav .container,
-.hero .container,
-.site-notice .container {
+.hero .container {
   max-width: none;
   width: 100%;
   padding-left: 50px;
@@ -2421,37 +2420,6 @@ img {
   grid-template-columns: 1.4fr repeat(5, 1fr);
 }
 
-/* ---------- Site notice ---------- */
-.site-notice {
-  background: #122a52;
-  border-bottom: 1px solid rgba(148, 175, 220, 0.22);
-  color: #d7e3f8;
-}
-
-.site-notice-inner {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 12px 24px;
-}
-
-.site-notice p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.site-notice button {
-  border: 1px solid rgba(148, 175, 220, 0.35);
-  background: rgba(59, 130, 246, 0.12);
-  color: #fff;
-  border-radius: 999px;
-  padding: 6px 14px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
 .trustbar-inner--cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -3027,8 +2995,7 @@ img {
 
 @media (max-width: 640px) {
   .nav .container,
-  .hero .container,
-  .site-notice .container {
+  .hero .container {
     padding-left: 16px;
     padding-right: 16px;
   }
@@ -3178,10 +3145,6 @@ img {
   .logo--light {
     width: 160px;
     height: 62px;
-  }
-
-  .site-notice-inner {
-    flex-direction: column;
   }
 }
 
