@@ -1,4 +1,17 @@
+import { useMemo, useState } from 'react'
 import Reveal from '../components/Reveal.jsx'
+import {
+  agentBenefits,
+  blogs,
+  faqs,
+  included,
+  informationGuides,
+  products,
+  serviceTabs,
+  steps,
+  trustPoints,
+  whyChoose,
+} from '../data/content.js'
 
 const Arrow = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -31,41 +44,8 @@ const ServiceIcon = ({ name }) => {
   if (name === 'consult') {
     return (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M8 10a4 4 0 1 1 8 0v1a4 4 0 0 1-8 0v-1Z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-        />
+        <path d="M8 10a4 4 0 1 1 8 0v1a4 4 0 0 1-8 0v-1Z" stroke="currentColor" strokeWidth="1.8" />
         <path d="M5 19a7 7 0 0 1 14 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    )
-  }
-  if (name === 'quality') {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M12 3l2.4 4.86L20 8.7l-4 3.9.94 5.5L12 15.9 7.06 18.1 8 12.6 4 8.7l5.6-.84L12 3z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinejoin="round"
-        />
-      </svg>
-    )
-  }
-  if (name === 'experts') {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M9.5 10.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7ZM16.5 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-        />
-        <path
-          d="M3.5 19a6 6 0 0 1 12 0M14 16.5a5 5 0 0 1 6.5 2.5"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
       </svg>
     )
   }
@@ -77,88 +57,35 @@ const ServiceIcon = ({ name }) => {
   )
 }
 
-const featureCards = [
-  {
-    icon: 'quality',
-    title: 'Quality working',
-    text: 'A team of professionals, driven by a single goal – to bring maximum benefit to the client.',
-    tone: 'blue',
-  },
-  {
-    icon: 'experts',
-    title: 'Expert consultants',
-    text: "Only experienced specialists. Our mission is to continuously improve the efficiency of the customer's business.",
-    tone: 'dark',
-  },
-]
+const newsImages = ['/news-1.jpg', '/news-2.jpg', '/news-3.jpg']
 
-const whyChecks = ['Audience services', 'Management accounting', 'Financial advice']
-
-const serviceCols = [
+const featuredPlans = [
   {
-    icon: 'finance',
-    title: 'Financial advice',
-    text: 'We advise and in practice help in solving problems in two key business blocks: operational and financial management.',
-    items: ['Audit of operating activities', 'Set up your company', 'SME financial', 'Microfinance'],
-  },
-  {
-    icon: 'consult',
-    title: 'Consulting services',
-    text: 'We provide various services: from one-time consultations to business management.',
-    items: ['Individual approach', 'Solving non-standard problems', 'Crisis management'],
-  },
-  {
-    icon: 'product',
-    title: 'Product solutions',
-    text: 'Design, manage and monitor implementation of business projects. New Product Launch Strategy.',
-    items: ['Digital Transformation', 'Knowledge Sharing', 'Operational Analysis'],
-  },
-]
-
-const plans = [
-  {
-    name: 'Standard',
-    desc: 'Special range of services for small and medium businesses',
-    price: '£25',
-    year: '£250/year',
-    features: ['Market research', 'Audit studies'],
+    name: 'Limited Company',
+    desc: 'Most common Companies House registration for medium, small and micro businesses.',
+    price: '£107',
+    features: ['Ready to trade company', 'Companies House fee included', 'Digital company documents', 'Free admin portal'],
     featured: false,
   },
   {
-    name: 'Pro Business',
-    desc: 'Create and scale your business, Crisis Management',
-    price: '£49',
-    year: '£500/year',
-    features: ['Market research', 'Audit studies', 'Set up your company', 'Financial analysis'],
+    name: 'LTD + Registered Office',
+    desc: 'Central London registered office with free service addresses for officers and shareholders.',
+    price: '£114',
+    features: ['Privacy protected address', 'Official post processing', 'Free officer service addresses', 'Lifetime support'],
     featured: true,
   },
-]
-
-const news = [
   {
-    img: '/news-1.jpg',
-    title: 'Financial crisis – how to protect business?',
-    excerpt: 'Practical steps to keep cash flow stable and protect your company during uncertain markets.',
-    category: 'Finance',
-    date: '29 Mar 2024',
-  },
-  {
-    img: '/news-2.jpg',
-    title: 'Bank secrecy is now in the past',
-    excerpt: 'What changing regulations mean for founders opening business accounts and staying compliant.',
-    category: 'Compliance',
-    date: '12 Feb 2024',
-  },
-  {
-    img: '/news-3.jpg',
-    title: 'Investment in index funds',
-    excerpt: 'A clear overview of how long-term index investing can support business owners’ personal wealth.',
-    category: 'Investing',
-    date: '04 Jan 2024',
+    name: 'Non-UK Residents LTD',
+    desc: 'Form a UK company with our central London address — no UK nationals required.',
+    price: '£163',
+    features: ['Central London address included', 'One person can form', 'Ready to trade', 'Lifetime support'],
+    featured: false,
   },
 ]
 
 export default function Home() {
+  const [tab, setTab] = useState('ltd')
+  const activeProducts = useMemo(() => products[tab] || [], [tab])
   const serviceVariants = ['left', 'popup', 'right']
   const newsVariants = ['bottom', 'float', 'top']
 
@@ -169,38 +96,38 @@ export default function Home() {
         <div className="hero-bg" aria-hidden="true" />
         <div className="container hero-grid">
           <div className="hero-copy animate-in">
-            <p className="brand-kicker">Welcome to UK.company! Best dedicated to serve you!</p>
+            <p className="brand-kicker">Welcome to UK.company! Online company formation from £107</p>
             <h1>You run your business. We&apos;ll form your company.</h1>
+            <p className="hero-sub">Register a company and apply for a bank account today.</p>
             <div className="hero-actions">
-              <a href="#contact" className="btn btn-primary btn-lg">
-                Free consultation <Arrow />
+              <a href="#prices" className="btn btn-primary btn-lg">
+                Start formation <Arrow />
               </a>
               <a href="#services" className="btn btn-outline btn-lg">
-                Our services <Arrow />
+                View packages <Arrow />
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* WELCOME */}
+      {/* TRUST / WELCOME */}
       <section className="welcome-section">
         <div className="container welcome-inner">
           <Reveal className="welcome-intro" variant="top">
             <p className="section-label anim-blink-soft">You are welcome</p>
-            <h2>Financial freedom could be just one phone call away...</h2>
+            <h2>Company formation in the UK has never been easier</h2>
             <p className="welcome-lead">
-              A balanced approach to developing a strategy and an effective system for managing, attracting and placing
-              capital is a key success factor. Our team is ready to analyze existing processes, develop a management
-              system that will reduce costs and increase the efficiency of your work.
+              Pick &amp; mix the services you need — no inflated bundles. Transparent pricing, approved Companies House
+              agents, and free lifetime support via your company administration portal.
             </p>
           </Reveal>
-          <div className="feature-pair">
-            {featureCards.map((c, i) => (
-              <Reveal key={c.title} delay={i * 140} variant={i === 0 ? 'left' : 'right'}>
-                <article className={`feature-card feature-card--${c.tone}`}>
+          <div className="feature-pair feature-pair--four">
+            {trustPoints.map((c, i) => (
+              <Reveal key={c.title} delay={i * 100} variant={i % 2 === 0 ? 'left' : 'right'}>
+                <article className={`feature-card feature-card--${i === 0 ? 'blue' : 'dark'}`}>
                   <div className="feature-icon anim-float-icon" aria-hidden="true">
-                    <ServiceIcon name={c.icon} />
+                    <ServiceIcon name={i % 2 === 0 ? 'finance' : 'consult'} />
                   </div>
                   <h3>{c.title}</h3>
                   <p>{c.text}</p>
@@ -224,42 +151,45 @@ export default function Home() {
         <div className="container split-row">
           <Reveal className="split-copy" variant="left">
             <p className="section-label">Why choose us</p>
-            <h2>We are the best agency to improve your deals</h2>
+            <h2>Why choose UK.company for your company formation?</h2>
             <p>
-              The accumulated knowledge, skills and experience make it possible to provide high-class services. Our
-              approach is based on the non-standard solution of tasks with the application of modern international
-              practices.
+              Our team have been supplying address and company formation services since 2011. We are authorised by
+              Companies House and keep prices amongst the lowest of any formation agent in London.
             </p>
             <ul className="check-list">
-              {whyChecks.map((item) => (
-                <li key={item}>
-                  <Check /> {item}
+              {whyChoose.slice(0, 4).map((item) => (
+                <li key={item.title}>
+                  <Check /> {item.title}
                 </li>
               ))}
             </ul>
           </Reveal>
           <Reveal className="split-media" variant="right" delay={160}>
-            <img src="/section-team.jpg" alt="Professional consultants reviewing a tablet" />
+            <img src="/section-team.jpg" alt="Professional consultants reviewing company documents" />
           </Reveal>
         </div>
       </section>
 
-      {/* ABOUT US */}
+      {/* ABOUT / AGENT BENEFITS */}
       <section className="split-section split-section--reverse" id="about">
         <div className="container split-row">
-          <Reveal className="split-media video-box" variant="left" delay={80}>
-            <div className="video-placeholder">
-              <strong>Sorry</strong>
-              <span>This video does not exist.</span>
-            </div>
+          <Reveal className="split-media" variant="left" delay={80}>
+            <img src="/section-why.jpg" alt="London business district" />
           </Reveal>
           <Reveal className="split-copy" variant="right" delay={140}>
             <p className="section-label">About us</p>
-            <h2>Unforgettable experience</h2>
+            <h2>Why use a company formation agent?</h2>
             <p>
-              All specialists have more than 10 years of experience in various fields. This allows us to solve maximum
-              problems.
+              Company formation agents provide an additional level of support with services Companies House cannot
+              offer — the extras new businesses need to get started quickly and securely.
             </p>
+            <ul className="check-list">
+              {agentBenefits.map((item) => (
+                <li key={item}>
+                  <Check /> {item}
+                </li>
+              ))}
+            </ul>
             <div className="text-links">
               <a href="#why">Who we are</a>
               <a href="#services">View our services</a>
@@ -268,40 +198,51 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES */}
+      {/* FORMATION PACKAGES */}
       <section className="services-section" id="services">
         <div className="container">
           <Reveal className="services-intro" variant="bottom">
             <p className="section-label">Our best services</p>
-            <h2>We&apos;re ready to share our advice and experience</h2>
+            <h2>To start your company formation, select one of the following</h2>
             <p className="services-lead">
-              We help to solve non-standard and complex problems, as well as problems that require an integrated
-              approach and the participation of specialists from different subject areas.
+              Limited companies, LLPs, LBG &amp; charity structures, CICs, non-UK resident packs, address services and
+              company restoration — all with clear pricing.
             </p>
           </Reveal>
-          <div className="services-grid">
-            {serviceCols.map((col, i) => (
-              <Reveal key={col.title} delay={i * 120} variant={serviceVariants[i] || 'popup'}>
-                <article className="service-col">
-                  <div className="service-icon anim-float-icon" aria-hidden="true">
-                    <ServiceIcon name={col.icon} />
+
+          <div className="svc-tabs" role="tablist" aria-label="Formation packages">
+            {serviceTabs.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={tab === t.id ? 'active' : ''}
+                onClick={() => setTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="product-grid">
+            {activeProducts.map((col, i) => (
+              <Reveal key={col.title} delay={i * 120} variant={serviceVariants[i % 3]}>
+                <article className="product-card">
+                  <div className="product-top">
+                    <h3>{col.title}</h3>
+                    <div className="product-price">{col.price}</div>
                   </div>
-                  <h3>{col.title}</h3>
                   <p>{col.text}</p>
-                  <ul className="check-list">
-                    {col.items.map((item) => (
-                      <li key={item}>
-                        <Check /> {item}
-                      </li>
-                    ))}
-                  </ul>
+                  <a href="#contact" className="btn btn-primary">
+                    Read more <Arrow />
+                  </a>
                 </article>
               </Reveal>
             ))}
           </div>
+
           <Reveal className="services-cta" delay={280} variant="blink">
             <a href="#prices" className="btn btn-outline">
-              View packages <Arrow />
+              View featured packages <Arrow />
             </a>
             <a href="#contact" className="btn btn-primary">
               Get in touch <Arrow />
@@ -310,15 +251,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* WHAT'S INCLUDED */}
+      <section className="services-section" id="included" style={{ paddingTop: 0 }}>
+        <div className="container">
+          <Reveal variant="top">
+            <p className="section-label">What&apos;s included</p>
+            <h2>Everything you need to start trading</h2>
+          </Reveal>
+          <div className="include-block">
+            <h3>Standard with every formation</h3>
+            <div className="include-grid">
+              {included.standard.map((item) => (
+                <article key={item.title} className="include-item">
+                  <h4>{item.title}</h4>
+                  <p>{item.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div className="include-block">
+            <h3>Optional free services</h3>
+            <div className="include-grid">
+              {included.optional.map((item) => (
+                <article key={item.title} className="include-item">
+                  <h4>{item.title}</h4>
+                  <p>{item.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CONTACT STRIP */}
       <section className="contact-strip">
         <div className="container contact-strip-inner">
           <Reveal variant="popup">
-            <h2>So that? Can contact and discuss Your business?</h2>
+            <h2>Are you Non-UK Resident? Don&apos;t worry — you can still form a company in the UK</h2>
           </Reveal>
           <Reveal className="hero-actions" delay={160} variant="bottom">
-            <a href="#services" className="btn btn-outline btn-lg">
-              Our services <Arrow />
+            <a href="#services" className="btn btn-outline btn-lg" onClick={() => setTab('nonuk')}>
+              Non-residents packages <Arrow />
             </a>
             <a href="#contact" className="btn btn-primary btn-lg anim-blink-soft">
               Get in touch <Arrow />
@@ -327,20 +300,58 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PERFORMANCE BANNER */}
+      {/* STEPS BANNER */}
       <section className="perf-banner">
         <div className="perf-banner-bg" aria-hidden="true" />
         <div className="container perf-banner-inner">
           <Reveal variant="top">
-            <p className="section-label section-label--light anim-blink-soft">Our best services</p>
-            <h2>We can help to improve your business performance</h2>
-            <p>Business consulting and strategy development</p>
+            <p className="section-label section-label--light anim-blink-soft">How it works</p>
+            <h2>Company formation in the UK has never been easier</h2>
+            <p>Select your name, pick services, enter details and make secure payment.</p>
           </Reveal>
+          <div className="steps-row">
+            {steps.map((s, i) => (
+              <Reveal key={s.title} delay={i * 100} variant="popup">
+                <article className="step-card">
+                  <span className="step-num">{i + 1}</span>
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
           <Reveal delay={200} variant="popup">
-            <a href="#contact" className="btn btn-primary btn-lg">
-              Free consultation <Arrow />
+            <a href="#prices" className="btn btn-primary btn-lg">
+              Get started <Arrow />
             </a>
           </Reveal>
+        </div>
+      </section>
+
+      {/* WHY DETAILS */}
+      <section className="services-section" id="why-details">
+        <div className="container">
+          <Reveal className="services-intro" variant="bottom">
+            <p className="section-label">Why UK.company</p>
+            <h2>Experience, privacy and specialised services</h2>
+          </Reveal>
+          <div className="include-grid">
+            {whyChoose.map((item) => (
+              <article key={item.title} className="include-item">
+                <h4>{item.title}</h4>
+                <p>{item.text}</p>
+                {item.bullets ? (
+                  <ul className="check-list">
+                    {item.bullets.map((b) => (
+                      <li key={b}>
+                        <Check /> {b}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -349,22 +360,22 @@ export default function Home() {
         <div className="container">
           <Reveal variant="top">
             <p className="section-label center">Prices</p>
-            <h2 className="center-title">We&apos;ll suggest the plan that&apos;s right for your business</h2>
+            <h2 className="center-title">Clear formation packages from £107</h2>
             <p className="prices-lead">
-              Tell us your average monthly expenses and we&apos;ll suggest the plan, that&apos;s right for your business.
+              No hidden charges. Pick the pack that fits your business — Limited Company, privacy address, or non-UK
+              resident formation.
             </p>
           </Reveal>
-          <div className="price-grid">
-            {plans.map((plan, i) => (
-              <Reveal key={plan.name} delay={i * 160} variant={i === 0 ? 'left' : 'right'}>
+          <div className="price-grid price-grid--3">
+            {featuredPlans.map((plan, i) => (
+              <Reveal key={plan.name} delay={i * 160} variant={i === 0 ? 'left' : i === 1 ? 'popup' : 'right'}>
                 <article className={`price-card ${plan.featured ? 'price-card--featured' : ''}`}>
                   <h3>{plan.name}</h3>
                   <p className="price-desc">{plan.desc}</p>
                   <div className="price-amt">
                     {plan.price}
-                    <span>/m</span>
+                    <span>inc. fee</span>
                   </div>
-                  <div className="price-year">{plan.year}</div>
                   <ul className="check-list">
                     {plan.features.map((f) => (
                       <li key={f}>
@@ -373,10 +384,10 @@ export default function Home() {
                     ))}
                   </ul>
                   <a href="#contact" className={`btn ${plan.featured ? 'btn-white' : 'btn-primary'}`}>
-                    Start free trial <Arrow />
+                    Get started <Arrow />
                   </a>
                   <a href="#services" className="learn-more">
-                    Learn more
+                    See all packages
                   </a>
                 </article>
               </Reveal>
@@ -385,23 +396,79 @@ export default function Home() {
         </div>
       </section>
 
-      {/* LATEST NEWS */}
+      {/* INFORMATION GUIDES */}
+      <section className="services-section" id="information">
+        <div className="container">
+          <Reveal className="services-intro" variant="top">
+            <p className="section-label">Information</p>
+            <h2>Guides to help you form and run your UK company</h2>
+            <p className="services-lead">
+              Everything from choosing a company name and SIC codes to banking options for non-UK residents and your free
+              company admin portal.
+            </p>
+          </Reveal>
+          <div className="info-grid">
+            {informationGuides.map((guide, i) => (
+              <Reveal key={guide.id} delay={(i % 3) * 80} variant={i % 2 === 0 ? 'left' : 'right'}>
+                <article className="info-card" id={`info-${guide.id}`}>
+                  <h3>{guide.title}</h3>
+                  <p>{guide.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQS */}
+      <section className="services-section" id="faqs">
+        <div className="container">
+          <Reveal className="services-intro" variant="top">
+            <p className="section-label">FAQs</p>
+            <h2>Frequently asked questions for our new customers</h2>
+          </Reveal>
+          <div className="faq-list">
+            {faqs.map((item) => (
+              <details key={item.q} className="faq-item">
+                <summary>
+                  {item.q}
+                  <span className="chev" aria-hidden="true">
+                    ▾
+                  </span>
+                </summary>
+                <p>{item.a}</p>
+                {item.bullets ? (
+                  <ul className="check-list">
+                    {item.bullets.map((b) => (
+                      <li key={b}>
+                        <Check /> {b}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* LATEST NEWS / BLOGS */}
       <section className="news-section" id="blogs">
         <div className="container">
           <Reveal className="news-intro" variant="left">
-            <p className="section-label">Latest news</p>
-            <h2>Read our latest articles tips &amp; news</h2>
+            <p className="section-label">Latest blogs</p>
+            <h2>Our latest blogs</h2>
             <p className="news-lead">
-              Practical guidance for founders — from company formation and compliance to protecting cash flow.
+              Practical guidance on UK company structures, non-resident formation and growing your business.
             </p>
           </Reveal>
           <div className="news-grid">
-            {news.map((n, i) => (
+            {blogs.map((n, i) => (
               <Reveal key={n.title} delay={i * 140} variant={newsVariants[i] || 'bottom'}>
                 <article className="news-card">
                   <a href="#blogs" className="news-card-media">
-                    <img src={n.img} alt="" />
-                    <span className="news-tag">{n.category}</span>
+                    <img src={newsImages[i] || '/news-1.jpg'} alt="" />
+                    <span className="news-tag">Blog</span>
                   </a>
                   <div className="news-card-body">
                     <h3>
@@ -411,8 +478,6 @@ export default function Home() {
                     <div className="news-card-footer">
                       <div className="news-meta">
                         <span>UK.company</span>
-                        <span aria-hidden="true">·</span>
-                        <time dateTime={n.date}>{n.date}</time>
                       </div>
                       <a href="#blogs" className="news-read">
                         Read more <Arrow />
@@ -425,9 +490,37 @@ export default function Home() {
           </div>
           <Reveal className="news-cta" delay={320} variant="blink">
             <a href="#contact" className="btn btn-primary">
-              Talk to an advisor <Arrow />
+              Are you ready to register your company? <Arrow />
             </a>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ADDRESS + RESTORATION INCLUDES */}
+      <section className="services-section" id="extra-includes">
+        <div className="container">
+          <div className="include-block">
+            <h3>Registered office — what&apos;s included</h3>
+            <div className="include-grid">
+              {included.address.map((item) => (
+                <article key={item.title} className="include-item">
+                  <h4>{item.title}</h4>
+                  <p>{item.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div className="include-block">
+            <h3>Company restoration — what&apos;s included</h3>
+            <div className="include-grid">
+              {included.restoration.map((item) => (
+                <article key={item.title} className="include-item">
+                  <h4>{item.title}</h4>
+                  <p>{item.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </>

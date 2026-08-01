@@ -1,14 +1,12 @@
 import Logo from './Logo.jsx'
-
-const aboutLinks = ['Home', 'What We Do', 'Who We Are', 'Blog', 'Contacts']
-const serviceLinks = ['Banking expertise', 'Consulting services', 'Product solutions']
+import { footer } from '../data/content.js'
 
 export default function Footer() {
   return (
     <footer className="footer calcue-footer" id="contact">
       <div className="container">
         <div className="footer-newsletter">
-          <h2>Stay up to date with upcoming workshops and new products</h2>
+          <h2>Are you ready to register your company?</h2>
           <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
             <label htmlFor="newsletter-email">Email Address</label>
             <input id="newsletter-email" type="email" placeholder="info@uk.company" />
@@ -16,41 +14,27 @@ export default function Footer() {
               By signing and clicking Submit, you affirm you have read and agree to the Privacy Policy and Terms of Use
               and want to receive news.
             </p>
+            <a href="#prices" className="btn btn-primary">
+              Get Started
+            </a>
           </form>
         </div>
 
-        <div className="footer-cols">
-          <div>
-            <h4>About</h4>
-            <ul>
-              {aboutLinks.map((l) => (
-                <li key={l}>
-                  <a href="#">{l}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4>Our Services</h4>
-            <ul>
-              {serviceLinks.map((l) => (
-                <li key={l}>
-                  <a href="#services">{l}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4>Find us</h4>
-            <p>27 Old Gloucester Street, London, WC1N 3AX, UK</p>
-            <div className="social-row">
-              <span>Fb</span>
-              <span>Ig</span>
-              <span>Yt</span>
-              <span>X</span>
-              <span>In</span>
+        <div className="footer-cols footer-cols--wide">
+          {footer.columns.map((col) => (
+            <div key={col.title}>
+              <h4>{col.title}</h4>
+              <ul>
+                {col.links.map((l) => (
+                  <li key={l}>
+                    <a href={l === 'Contact Us' || l === 'Home' ? '#contact' : l === 'Blogs' ? '#blogs' : '#services'}>
+                      {l}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          ))}
           <div>
             <h4>Contacts</h4>
             <p>
@@ -68,7 +52,17 @@ export default function Footer() {
               <br />
               <a href="mailto:info@uk.company">info@uk.company</a>
             </p>
+            <p>{footer.address}</p>
           </div>
+        </div>
+
+        <div className="footer-legal">
+          <p>
+            <strong>UK.company</strong> {footer.tradingName}
+          </p>
+          <p>
+            {footer.companyNr} · {footer.vat} · {footer.ico} · {footer.acsp}
+          </p>
         </div>
 
         <div className="footer-bottom footer-bottom--calcue">

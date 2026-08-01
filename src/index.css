@@ -94,12 +94,14 @@ img {
   padding: 0 24px;
 }
 
-/* Give header + hero a wider canvas on desktop */
+/* Header + hero: full width with equal side gutters */
 .nav .container,
-.hero .container {
-  max-width: 1380px;
-  padding-left: 28px;
-  padding-right: 28px;
+.hero .container,
+.site-notice .container {
+  max-width: none;
+  width: 100%;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 .section {
@@ -228,18 +230,60 @@ img {
   position: sticky;
   top: 0;
   z-index: 60;
-  background: rgba(3, 11, 26, 0.96);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(148, 175, 220, 0.14);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  background: #c8102e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 28px rgba(140, 10, 30, 0.28);
+}
+
+.nav .nav-links > li > a,
+.nav .nav-links > li > button,
+.nav .nav-phone,
+.nav .nav-phone svg {
+  color: #fff;
+}
+
+.nav .nav-links a:hover,
+.nav .nav-links button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.nav .nav-phone-divider {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.nav .nav-cta-btn {
+  background: #fff;
+  color: #c8102e;
+  box-shadow: none;
+}
+
+.nav .nav-cta-btn:hover {
+  background: #f3f3f3;
+  color: #a00d25;
+}
+
+.nav .nav-toggle {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav .nav-toggle span {
+  background: #fff;
+}
+
+.nav.nav--open {
+  background: #c8102e;
+  backdrop-filter: none;
 }
 
 .nav-inner {
   display: flex;
   align-items: center;
   gap: 20px;
-  min-height: 108px;
-  padding: 12px 24px;
+  min-height: 120px;
+  padding: 12px 0;
+  width: 100%;
 }
 
 .nav-links {
@@ -276,9 +320,115 @@ img {
 }
 
 .nav-links a:hover,
-.nav-links button:hover {
+.nav-links button:hover,
+.nav-links button.is-open {
   color: #fff;
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ---------- Mega menu (hover) ---------- */
+.has-mega {
+  position: static;
+}
+
+.has-mega > button {
+  position: relative;
+  z-index: 2;
+}
+
+.has-mega > button.is-open {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.mega-panel {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 70;
+  background: #05070c;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  padding: 28px 0 32px;
+}
+
+/* Invisible bridge so hover doesn't drop between nav and panel */
+.mega-panel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+.has-mega:hover .mega-panel,
+.has-mega:focus-within .mega-panel {
+  display: block;
+}
+
+.mega-inner {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 36px;
+  align-items: stretch;
+}
+
+.mega-media {
+  border-radius: 4px;
+  overflow: hidden;
+  min-height: 220px;
+  background: #111;
+}
+
+.mega-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mega-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 28px;
+  align-content: start;
+}
+
+.mega-col {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+
+.mega-col a {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 8px;
+  border-radius: 6px;
+  color: #e8eefc;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.mega-col a svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: #fff;
+  opacity: 0.85;
+}
+
+.mega-col a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
 }
 
 .has-drop {
@@ -468,6 +618,13 @@ img {
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.2));
 }
 
+/* Larger logo in the header only */
+.nav .logo--header,
+.nav .logo--light {
+  width: 280px;
+  height: 108px;
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -518,12 +675,23 @@ img {
   width: 100%;
   height: 100%;
   align-items: center;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .hero-copy {
   padding: 40px 0;
   max-width: 590px;
   justify-self: start;
+  margin-left: 0;
+}
+
+.hero-sub {
+  color: #c8d6ef;
+  font-size: 1.05rem;
+  margin: -8px 0 28px;
+  max-width: 480px;
+  line-height: 1.55;
 }
 
 .hero-copy.animate-in .brand-kicker {
@@ -841,6 +1009,70 @@ img {
   max-width: 900px;
   margin: 0 auto;
   text-align: left;
+}
+
+.feature-pair--four {
+  max-width: 1100px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.price-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.steps-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 28px 0 32px;
+  text-align: left;
+}
+
+.step-card {
+  background: rgba(3, 11, 26, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 18px 16px;
+}
+
+.step-card h3 {
+  color: #fff;
+  font-size: 1rem;
+  margin: 8px 0 6px;
+}
+
+.step-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9rem;
+}
+
+.step-num {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--blue-400);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.footer-cols--wide {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.footer-legal {
+  margin: 28px 0 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(148, 175, 220, 0.14);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.88rem;
+}
+
+.footer-legal p {
+  margin: 0 0 6px;
 }
 
 .feature-card {
@@ -2191,9 +2423,9 @@ img {
 
 /* ---------- Site notice ---------- */
 .site-notice {
-  background: #fff7e8;
-  border-bottom: 1px solid #f3d7a1;
-  color: #7a4d08;
+  background: #122a52;
+  border-bottom: 1px solid rgba(148, 175, 220, 0.22);
+  color: #d7e3f8;
 }
 
 .site-notice-inner {
@@ -2210,9 +2442,9 @@ img {
 }
 
 .site-notice button {
-  border: 1px solid #e2b56a;
-  background: #fff;
-  color: #7a4d08;
+  border: 1px solid rgba(148, 175, 220, 0.35);
+  background: rgba(59, 130, 246, 0.12);
+  color: #fff;
   border-radius: 999px;
   padding: 6px 14px;
   font-weight: 600;
@@ -2348,6 +2580,34 @@ img {
   font-size: 0.94rem;
 }
 
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px 20px;
+  box-shadow: var(--shadow-sm);
+  scroll-margin-top: 140px;
+}
+
+.info-card h3 {
+  font-size: 1.05rem;
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.info-card p {
+  margin: 0;
+  color: var(--body);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2449,14 +2709,36 @@ img {
     width: 190px;
     height: 72px;
   }
+
+  .nav .logo--header,
+  .nav .logo--light {
+    width: 240px;
+    height: 92px;
+  }
 }
 
 @media (max-width: 1100px) {
   .services-grid,
   .news-grid,
-  .footer-cols {
+  .footer-cols,
+  .product-grid,
+  .include-grid,
+  .steps-row,
+  .price-grid--3,
+  .footer-cols--wide,
+  .info-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .mega-inner {
+    grid-template-columns: 160px 1fr;
+    gap: 20px;
+  }
+
+  .mega-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .nav-inner {
     gap: 12px;
     min-height: 72px;
@@ -2472,6 +2754,17 @@ img {
   .logo--header {
     width: 140px;
     height: 52px;
+  }
+
+  .logo--light {
+    width: 140px;
+    height: 52px;
+  }
+
+  .nav .logo--header,
+  .nav .logo--light {
+    width: 170px;
+    height: 66px;
   }
 
   .nav-cta-btn,
@@ -2734,7 +3027,8 @@ img {
 
 @media (max-width: 640px) {
   .nav .container,
-  .hero .container {
+  .hero .container,
+  .site-notice .container {
     padding-left: 16px;
     padding-right: 16px;
   }
@@ -2797,7 +3091,14 @@ img {
   .price-grid,
   .news-grid,
   .footer-cols,
-  .services-grid {
+  .services-grid,
+  .product-grid,
+  .include-grid,
+  .feature-pair--four,
+  .price-grid--3,
+  .steps-row,
+  .footer-cols--wide,
+  .info-grid {
     grid-template-columns: 1fr;
   }
 

@@ -1,6 +1,64 @@
 export const notice =
   'Notice to clients: We are currently only accepting new business from the UK, USA, Canada, Europe, Australia, New Zealand, Singapore, Turkey, Japan, South Korea, Israel, Jordan, UAE and Hong Kong. Outside these regions, applications are accepted only via an approved professional agent.'
 
+export const informationGuides = [
+  {
+    id: 'why-use-agent',
+    title: 'Why Use Any Company Formation Agent',
+    text: 'The simple reason for choosing a company formation agent is the additional support you receive. Agents provide services Companies House cannot offer — bank referrals, registered office and mail handling, company administration portals, accountant referrals and VAT registration.',
+  },
+  {
+    id: 'choosing-name',
+    title: 'Choosing a Company Name',
+    text: 'Your company name must be approved by Companies House. Names cannot be the “same as” an existing company, include sensitive words without permission, suggest a government connection, constitute an offence, or be offensive. Always check availability before you order.',
+  },
+  {
+    id: 'shares-capital',
+    title: 'Shares and the Statement of Capital',
+    text: 'Most private limited companies are limited by shares. The statement of capital records the number of shares, share classes and the amount paid up. Alphabet (multi-class) shares can carry different voting and dividend rights when you need a more flexible structure.',
+  },
+  {
+    id: 'money-laundering',
+    title: 'Money Laundering Regulations',
+    text: 'UK company formation agents must comply with anti-money laundering rules. We verify identity for directors, shareholders and persons of significant control before submitting your application to Companies House.',
+  },
+  {
+    id: 'company-secretaries',
+    title: 'Company Secretaries',
+    text: 'Private limited companies are not required to appoint a company secretary, but many still do for governance and filing support. Public companies must have a qualified company secretary.',
+  },
+  {
+    id: 'sic-code',
+    title: 'Company SIC Code',
+    text: 'A Standard Industrial Classification (SIC) code describes your company’s main business activity. You choose one or more SIC codes when you form the company so Companies House and HMRC understand what you do.',
+  },
+  {
+    id: 'before-you-start',
+    title: 'Before You Start',
+    text: 'Before ordering, decide your company type, proposed name, directors, shareholders (or guarantors/members), share structure, registered office address and SIC codes. Have ID documents ready for verification.',
+  },
+  {
+    id: 'directors-shareholders',
+    title: 'Company Directors + Shareholders',
+    text: 'A private limited company can be formed with one person acting as both sole director and sole shareholder. There is no upper limit on the number of directors or shareholders. Directors manage the company; shareholders own it.',
+  },
+  {
+    id: 'bank-non-uk',
+    title: 'Bank Options For Non-UK Residents',
+    text: 'Non-UK residents can form a UK company. Opening a traditional UK high-street bank account can be harder from overseas, so many founders use fintech or specialist banks that accept non-resident applications.',
+  },
+  {
+    id: 'banking-referrals',
+    title: 'Banking Referrals',
+    text: 'UK residents can be referred to high-street and fintech banks through our partners. We also offer merchant account referrals if you need to accept card payments.',
+  },
+  {
+    id: 'admin-portal',
+    title: 'Free Company Admin Portal',
+    text: 'Every formation includes a free online administration portal linked to Companies House so you can update officers, file changes and manage your company records for the life of the company — with free lifetime support.',
+  },
+]
+
 export const nav = {
   topLinks: [
     { label: 'Account login', href: '#' },
@@ -27,19 +85,7 @@ export const nav = {
     'Sole Traders Address Service',
     'Digital Id Verification Service',
   ],
-  information: [
-    'Why Use Any Company Formation Agent',
-    'Choosing a Company Name',
-    'Shares and the Statement of Capital',
-    'Money Laundering Regulations',
-    'Company Secretaries',
-    'Company SIC Code',
-    'Before You Start',
-    'Company Directors + Shareholders',
-    'Bank Options For Non-UK Residents',
-    'Banking Referrals',
-    'Free Company Admin Portal',
-  ],
+  information: informationGuides.map((g) => g.title),
 }
 
 export const trustPoints = [
