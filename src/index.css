@@ -309,7 +309,7 @@ img {
 .nav-links > li > a,
 .nav-links > li > button {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   color: #d7e3f8;
   transition: color 0.15s ease, background 0.15s ease;
   background: none;
@@ -2873,7 +2873,7 @@ img {
 
   .nav-links > li > a,
   .nav-links > li > button {
-    font-size: 0.82rem;
+    font-size: 1.05rem;
     padding: 8px 8px;
   }
 
