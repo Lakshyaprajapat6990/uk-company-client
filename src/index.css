@@ -280,12 +280,13 @@ img {
 .nav-inner {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 120px;
-  padding: 12px 0;
+  gap: 10px;
+  min-height: 100px;
+  padding: 10px 0;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .nav-desktop {
@@ -293,13 +294,14 @@ img {
   align-items: center;
   min-width: 0;
   flex: 1 1 auto;
+  overflow: visible;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 2px;
-  margin-left: 4px;
+  gap: 0;
+  margin-left: 2px;
   list-style: none;
   padding: 0;
   flex-wrap: nowrap;
@@ -309,17 +311,17 @@ img {
 .nav-links > li > a,
 .nav-links > li > button {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   color: #d7e3f8;
   transition: color 0.15s ease, background 0.15s ease;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px 10px;
+  padding: 8px 8px;
   font-family: inherit;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   white-space: nowrap;
   border-radius: 8px;
 }
@@ -486,7 +488,7 @@ img {
 .nav-cta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 28px;
   margin-left: auto;
   flex-shrink: 0;
   min-width: 0;
@@ -494,18 +496,20 @@ img {
 
 .nav-phones {
   display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .nav-phone {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   color: #fff;
   font-weight: 700;
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   letter-spacing: 0.01em;
   cursor: pointer;
@@ -521,15 +525,17 @@ img {
 }
 
 .nav-phone-divider {
-  width: 1px;
-  height: 22px;
-  background: rgba(255, 255, 255, 0.28);
-  flex-shrink: 0;
+  display: none;
 }
 
 .nav-cta .btn {
   flex-shrink: 0;
   white-space: nowrap;
+}
+
+/* Avoid Contact us + phone numbers colliding on wide desktops */
+.nav-link-contact {
+  display: none;
 }
 
 .nav-toggle {
@@ -631,8 +637,8 @@ img {
 .nav .logo--light,
 .calcue-footer .logo--header,
 .calcue-footer .logo--light {
-  width: 280px;
-  height: 108px;
+  width: 220px;
+  height: 84px;
 }
 
 /* ---------- Hero ---------- */
@@ -640,7 +646,7 @@ img {
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: calc(100svh - 108px);
+  height: calc(100svh - 100px);
   min-height: 560px;
   display: flex;
   align-items: center;
@@ -1091,7 +1097,12 @@ img {
   padding: 28px 24px 26px;
   overflow: hidden;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
 }
 
 .feature-card:hover {
@@ -1137,10 +1148,30 @@ img {
   right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--blue-400), transparent 80%);
+  transition: opacity 0.25s ease, height 0.25s ease;
 }
 
 .feature-card--dark:hover {
-  border-color: rgba(96, 165, 250, 0.35);
+  background: linear-gradient(145deg, #3b82f6 0%, #1d4ed8 48%, #0a1f44 100%);
+  border-color: rgba(147, 197, 253, 0.28);
+  color: #fff;
+}
+
+.feature-card--dark:hover::before {
+  inset: 0;
+  height: auto;
+  background: radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.16), transparent 42%);
+}
+
+.feature-card--dark:hover h3,
+.feature-card--dark:hover p {
+  color: #fff;
+}
+
+.feature-card--dark:hover .feature-icon {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .feature-card h3 {
@@ -1148,6 +1179,7 @@ img {
   font-size: 1.22rem;
   margin: 0 0 10px;
   color: #fff;
+  transition: color 0.25s ease;
 }
 
 .feature-card p {
@@ -1156,6 +1188,7 @@ img {
   font-size: 0.95rem;
   line-height: 1.6;
   color: var(--body);
+  transition: color 0.25s ease;
 }
 
 .feature-card--blue p {
@@ -1173,6 +1206,7 @@ img {
   color: var(--blue-300);
   background: rgba(59, 130, 246, 0.14);
   border: 1px solid rgba(96, 165, 250, 0.22);
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
 }
 
 .welcome-cta {
@@ -1743,8 +1777,15 @@ img {
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.7);
   margin-top: 8px;
+  margin-bottom: 0;
   line-height: 1.4;
   max-width: 52ch;
+}
+
+.newsletter-submit {
+  margin-top: 14px;
+  padding: 10px 22px;
+  font-size: 0.88rem;
 }
 
 .footer-cols {
@@ -2815,41 +2856,31 @@ img {
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1400px) {
+@media (max-width: 1600px) {
   .nav .logo--header,
   .nav .logo--light,
   .calcue-footer .logo--header,
   .calcue-footer .logo--light {
     width: 200px;
-    height: 78px;
+    height: 76px;
   }
 
   .nav-inner {
-    min-height: 96px;
-    gap: 10px;
-  }
-
-  .nav-links > li > a,
-  .nav-links > li > button {
-    font-size: 0.82rem;
-    padding: 8px 8px;
-  }
-
-  .nav-phone {
-    font-size: 0.78rem;
+    min-height: 88px;
+    gap: 8px;
   }
 
   .nav .nav-cta-btn {
     padding: 11px 18px;
     font-size: 0.88rem;
   }
+
+  .nav-phone {
+    font-size: 0.76rem;
+  }
 }
 
-@media (max-width: 1280px) {
-  .nav-phones {
-    display: none;
-  }
-
+@media (max-width: 1400px) {
   .nav .logo--header,
   .nav .logo--light,
   .calcue-footer .logo--header,
@@ -2858,58 +2889,43 @@ img {
     height: 70px;
   }
 
-  .logo--header,
-  .logo--light {
-    width: 180px;
-    height: 70px;
+  .nav-inner {
+    min-height: 80px;
+    gap: 8px;
   }
 
-  .nav-inner {
-    min-height: 88px;
+  .nav-links > li > a,
+  .nav-links > li > button {
+    font-size: 0.8rem;
+    padding: 7px 6px;
+  }
+
+  .nav .nav-cta-btn {
+    padding: 10px 16px;
+    font-size: 0.86rem;
   }
 }
 
-@media (max-width: 1100px) {
-  .services-grid,
-  .news-grid,
-  .footer-cols,
-  .product-grid,
-  .include-grid,
-  .steps-row,
-  .price-grid--3,
-  .footer-cols--wide,
-  .info-grid,
-  .feature-pair,
-  .feature-pair--four {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .mega-inner {
-    grid-template-columns: 140px 1fr;
-    gap: 16px;
-  }
-
-  .mega-cols {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .mega-media {
-    min-height: 180px;
-  }
-
-  /* Switch to mobile nav earlier so header never clips */
-  .nav-inner {
-    min-height: 72px;
-    padding: 8px 0;
-    gap: 12px;
-  }
-
+/* Tablet / small laptop: hamburger menu */
+@media (max-width: 1280px) {
   .nav .logo--header,
   .nav .logo--light,
   .calcue-footer .logo--header,
   .calcue-footer .logo--light {
     width: 160px;
     height: 62px;
+  }
+
+  .logo--header,
+  .logo--light {
+    width: 160px;
+    height: 62px;
+  }
+
+  .nav-inner {
+    min-height: 72px;
+    padding: 8px 0;
+    gap: 12px;
   }
 
   .nav-phones,
@@ -2955,7 +2971,8 @@ img {
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 72px 16px 28px;
+    padding: max(72px, env(safe-area-inset-top, 0px) + 64px) 16px
+      max(28px, env(safe-area-inset-bottom, 0px)) 16px;
     background: #030b1a;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -3050,12 +3067,15 @@ img {
   .mobile-menu-footer .nav-phone {
     display: inline-flex;
     width: 100%;
+    max-width: 100%;
     padding: 12px;
     border: 1px solid rgba(148, 175, 220, 0.2);
     border-radius: 10px;
     background: rgba(59, 130, 246, 0.08);
     box-sizing: border-box;
     color: #fff;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .hero {
@@ -3069,7 +3089,7 @@ img {
   }
 
   .hero-copy {
-    max-width: min(420px, 100%);
+    max-width: min(440px, 100%);
     padding: 36px 0;
   }
 
@@ -3082,10 +3102,54 @@ img {
     min-width: 0;
     flex: 1 1 180px;
   }
+}
+
+@media (max-width: 1100px) {
+  .services-grid,
+  .news-grid,
+  .footer-cols,
+  .product-grid,
+  .include-grid,
+  .steps-row,
+  .price-grid--3,
+  .footer-cols--wide,
+  .info-grid,
+  .feature-pair,
+  .feature-pair--four {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mega-inner {
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+  }
+
+  .mega-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mega-media {
+    min-height: 180px;
+  }
 
   .split-row,
   .price-grid {
     grid-template-columns: 1fr;
+  }
+
+  .svc-tabs {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+  }
+
+  .svc-tabs button {
+    flex: 0 0 auto;
+    font-size: 0.86rem;
+    padding: 9px 14px;
   }
 }
 

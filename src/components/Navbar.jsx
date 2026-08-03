@@ -167,7 +167,7 @@ export default function Navbar() {
                   Blogs
                 </a>
               </li>
-              <li>
+              <li className="nav-link-contact">
                 <a href="#contact" onClick={closeAll}>
                   Contact us
                 </a>

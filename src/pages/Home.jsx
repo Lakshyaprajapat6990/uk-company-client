@@ -125,7 +125,7 @@ export default function Home() {
           <div className="feature-pair feature-pair--four">
             {trustPoints.map((c, i) => (
               <Reveal key={c.title} delay={i * 100} variant={i % 2 === 0 ? 'left' : 'right'}>
-                <article className={`feature-card feature-card--${i === 0 ? 'blue' : 'dark'}`}>
+                <article className="feature-card feature-card--dark">
                   <div className="feature-icon anim-float-icon" aria-hidden="true">
                     <ServiceIcon name={i % 2 === 0 ? 'finance' : 'consult'} />
                   </div>

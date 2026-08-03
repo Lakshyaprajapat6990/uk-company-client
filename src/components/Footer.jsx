@@ -49,11 +49,14 @@ export default function Footer() {
           <h2>Stay up to date with upcoming workshops and new products</h2>
           <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
             <label htmlFor="newsletter-email">Email Address</label>
-            <input id="newsletter-email" type="email" placeholder="info@uk.company" />
+            <input id="newsletter-email" type="email" name="email" placeholder="info@uk.company" required />
             <p className="newsletter-note">
               By signing and clicking Submit, you affirm you have read and agree to the Privacy Policy and Terms of Use
               and want to receive news.
             </p>
+            <button type="submit" className="btn btn-primary newsletter-submit">
+              Submit
+            </button>
           </form>
         </div>
 
