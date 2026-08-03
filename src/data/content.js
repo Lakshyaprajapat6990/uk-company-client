@@ -431,31 +431,22 @@ export const footer = {
   address: '27 Old Gloucester Street, London, WC1N 3AX, UK',
   columns: [
     {
-      title: 'Formation Services:',
+      title: 'About',
       links: [
-        'Limited Companies',
-        'LLP Companies',
-        'Community Interest Company (LBG)',
-        'Charity -Limited by Guarantee',
-        'More than 1 class of share companies',
-        'Supplying Own or Bespoke Articles',
+        { label: 'Home', href: '#' },
+        { label: 'What We Do', href: '#services' },
+        { label: 'Who We Are', href: '#about' },
+        { label: 'Blog', href: '#blogs' },
+        { label: 'Contacts', href: '#contact' },
       ],
     },
     {
-      title: 'Non-UK Services:',
-      links: ['LTD Companies for Non-UK Residents', 'LLP Companies for Non-UK Residents'],
-    },
-    {
-      title: 'Additional Services:',
-      links: ['Registered Office Service', 'Virtual Address Service', 'Company Restoration Service'],
-    },
-    {
-      title: 'Legal:',
-      links: ['Terms & Conditions', 'GDPR Privacy Policy', 'Refund & Cancellation Policy', 'Cookies Policy'],
-    },
-    {
-      title: 'General Links:',
-      links: ['Home', 'Contact Us', 'Sitemap', 'Blogs'],
+      title: 'Our Services',
+      links: [
+        { label: 'Company Formations', href: '#services' },
+        { label: 'Additional Services', href: '#services' },
+        { label: 'Packages & Pricing', href: '#prices' },
+      ],
     },
   ],
 }

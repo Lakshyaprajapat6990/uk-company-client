@@ -187,7 +187,7 @@ export default function Navbar() {
                 <span>Int: +44 333-444-2222</span>
               </a>
             </div>
-            <a href="#contact" className="btn btn-dark nav-cta-btn">
+            <a href="mailto:info@uk.company" className="btn btn-dark nav-cta-btn">
               Get in touch <Arrow />
             </a>
             <button
@@ -279,7 +279,7 @@ export default function Navbar() {
               <PhoneIcon />
               <span>Int: +44 333-444-2222</span>
             </a>
-            <a href="#contact" className="btn btn-dark btn-block" onClick={closeAll}>
+            <a href="mailto:info@uk.company" className="btn btn-dark btn-block" onClick={closeAll}>
               Get in touch <Arrow />
             </a>
           </div>

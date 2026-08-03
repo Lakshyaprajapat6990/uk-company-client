@@ -139,8 +139,8 @@ export default function Home() {
             <a href="tel:03334442222" className="btn btn-outline">
               Call 0333-444-2222
             </a>
-            <a href="#contact" className="btn btn-primary">
-              Get in touch <Arrow />
+            <a href="mailto:info@uk.company" className="btn btn-primary">
+              Email us <Arrow />
             </a>
           </Reveal>
         </div>
