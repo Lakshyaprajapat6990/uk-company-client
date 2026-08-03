@@ -1840,22 +1840,27 @@ img {
 
 .social-row span,
 .social-dot {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.65);
   display: grid;
   place-items: center;
-  font-size: 0.6rem;
-  font-weight: 600;
   color: #fff;
   text-decoration: none;
   flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.social-dot svg {
+  display: block;
 }
 
 .social-dot:hover {
   background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
   text-decoration: none;
+  transform: translateY(-1px);
 }
 
 .footer-bottom--calcue {
