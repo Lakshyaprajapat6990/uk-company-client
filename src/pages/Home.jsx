@@ -252,9 +252,9 @@ export default function Home() {
       </section>
 
       {/* WHAT'S INCLUDED */}
-      <section className="services-section" id="included" style={{ paddingTop: 0 }}>
+      <section className="services-section" id="included">
         <div className="container">
-          <Reveal variant="top">
+          <Reveal className="services-intro" variant="top">
             <p className="section-label">What&apos;s included</p>
             <h2>Everything you need to start trading</h2>
           </Reveal>
