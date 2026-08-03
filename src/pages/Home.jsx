@@ -96,14 +96,16 @@ export default function Home() {
         <div className="hero-bg" aria-hidden="true" />
         <div className="container hero-grid">
           <div className="hero-copy animate-in">
-            <p className="brand-kicker">Welcome to UK.company! Online company formation from £107</p>
+            <p className="brand-kicker">
+              Welcome to UK.company! Online company formation from <span className="brand-kicker-price">£107</span>
+            </p>
             <h1>You run your business. We&apos;ll form your company.</h1>
             <p className="hero-sub">Register a company and apply for a bank account today.</p>
             <div className="hero-actions">
               <a href="#prices" className="btn btn-primary btn-lg">
                 Start formation <Arrow />
               </a>
-              <a href="#services" className="btn btn-outline btn-lg">
+              <a href="#services" className="btn btn-outline hero-btn-secondary">
                 View packages <Arrow />
               </a>
             </div>
