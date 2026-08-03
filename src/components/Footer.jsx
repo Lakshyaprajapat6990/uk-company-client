@@ -111,7 +111,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom footer-bottom--calcue">
-          <Logo header light />
+          <Logo light />
           <span>UK.company © {new Date().getFullYear()}. All Rights Reserved.</span>
         </div>
       </div>
