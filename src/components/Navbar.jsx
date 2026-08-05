@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { informationGuides, nav } from '../data/content.js'
 
@@ -29,8 +30,30 @@ function chunk(arr, size) {
   return out
 }
 
-function MegaMenu({ items, image, imageAlt, onNavigate, linkPrefix = '#services' }) {
+function MegaMenu({ items, image, imageAlt, onNavigate, linkPrefix = '#services', slugRoutePrefix = null }) {
   const columns = chunk(items, Math.ceil(items.length / 3) || 1)
+
+  const renderLink = (item) => {
+    const href = typeof item === 'object' ? `${linkPrefix}-${item.id}` : linkPrefix
+    const label = typeof item === 'object' ? item.title : item
+
+    if (slugRoutePrefix && typeof item === 'object' && (item.slug || item.id)) {
+      const targetSlug = item.slug ?? item.id
+      return (
+        <Link to={`/${slugRoutePrefix}/${targetSlug}`} onClick={onNavigate}>
+          <Chevron />
+          <span>{label}</span>
+        </Link>
+      )
+    }
+
+    return (
+      <a href={href} onClick={onNavigate}>
+        <Chevron />
+        <span>{label}</span>
+      </a>
+    )
+  }
 
   return (
     <div className="mega-panel" role="region">
@@ -42,19 +65,8 @@ function MegaMenu({ items, image, imageAlt, onNavigate, linkPrefix = '#services'
           {columns.map((col, i) => (
             <ul key={i} className="mega-col">
               {col.map((item) => {
-                const href =
-                  typeof item === 'object'
-                    ? `${linkPrefix}-${item.id}`
-                    : linkPrefix
-                const label = typeof item === 'object' ? item.title : item
-                return (
-                  <li key={label}>
-                    <a href={href} onClick={onNavigate}>
-                      <Chevron />
-                      <span>{label}</span>
-                    </a>
-                  </li>
-                )
+                const label = typeof item === 'object' ? item.title || item.slug : item
+                return <li key={label}>{renderLink(item)}</li>
               })}
             </ul>
           ))}
@@ -107,6 +119,7 @@ export default function Navbar() {
                 </button>
                 <MegaMenu
                   items={nav.companyFormations}
+                  slugRoutePrefix="formation"
                   image="/hero-professional.jpg"
                   imageAlt="Professional ready to help with company formation"
                   onNavigate={closeAll}
@@ -131,6 +144,7 @@ export default function Navbar() {
                 </button>
                 <MegaMenu
                   items={nav.additionalServices}
+                  slugRoutePrefix="additional"
                   image="/section-team.jpg"
                   imageAlt="Additional company services"
                   onNavigate={closeAll}
@@ -155,6 +169,7 @@ export default function Navbar() {
                 </button>
                 <MegaMenu
                   items={informationGuides}
+                  slugRoutePrefix="info"
                   image="/hero-professional.jpg"
                   imageAlt="Company formation information guides"
                   linkPrefix="#info"
@@ -216,10 +231,10 @@ export default function Navbar() {
               </button>
               <ul className="dropdown">
                 {nav.companyFormations.map((item) => (
-                  <li key={item}>
-                    <a href="#services" onClick={closeAll}>
-                      {item}
-                    </a>
+                  <li key={item.slug}>
+                    <Link to={`/formation/${item.slug}`} onClick={closeAll}>
+                      {item.title}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -233,10 +248,10 @@ export default function Navbar() {
               </button>
               <ul className="dropdown">
                 {nav.additionalServices.map((item) => (
-                  <li key={item}>
-                    <a href="#services" onClick={closeAll}>
-                      {item}
-                    </a>
+                  <li key={item.slug}>
+                    <Link to={`/additional/${item.slug}`} onClick={closeAll}>
+                      {item.title}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -251,9 +266,9 @@ export default function Navbar() {
               <ul className="dropdown">
                 {informationGuides.map((item) => (
                   <li key={item.id}>
-                    <a href={`#info-${item.id}`} onClick={closeAll}>
+                    <Link to={`/info/${item.id}`} onClick={closeAll}>
                       {item.title}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

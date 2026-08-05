@@ -1,3 +1,6 @@
+import { formationNavItems } from './formationPages.js'
+import { additionalServiceNavItems } from './additionalServicePages.js'
+
 export const informationGuides = [
   {
     id: 'why-use-agent',
@@ -62,26 +65,8 @@ export const nav = {
     { label: 'Post Login', href: '#' },
     { label: 'Contact us', href: '#contact' },
   ],
-  companyFormations: [
-    'Limited Company Formation',
-    'LTD Company With Registered Office',
-    'LTD Company With VAT Registration',
-    'LTD Companies for Non UK Residents',
-    'LLP Companies for Non UK Residents',
-    'Limited Liability Partnerships',
-    'LBG Company with "ltd"/"limited"',
-    'LBG Company "ltd" / "limited" Exemption',
-    'Community Interest Company (CIC) – LBG',
-    'Community Interest Company (CIC) – LTD',
-    'Companies with more than 1 class of share',
-    'Companies with owner supplied A Of A',
-  ],
-  additionalServices: [
-    'Company Restoration Service',
-    'Registered Office Services',
-    'Sole Traders Address Service',
-    'Digital Id Verification Service',
-  ],
+  companyFormations: formationNavItems,
+  additionalServices: additionalServiceNavItems,
   information: informationGuides.map((g) => g.title),
 }
 

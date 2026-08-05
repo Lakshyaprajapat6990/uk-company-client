@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import { getFormationSlugByTitle } from '../data/formationPages.js'
 import {
   agentBenefits,
   blogs,
@@ -234,9 +236,15 @@ export default function Home() {
                     <div className="product-price">{col.price}</div>
                   </div>
                   <p>{col.text}</p>
-                  <a href="#contact" className="btn btn-primary">
-                    Read more <Arrow />
-                  </a>
+                  {getFormationSlugByTitle(col.title) ? (
+                    <Link to={`/formation/${getFormationSlugByTitle(col.title)}`} className="btn btn-primary">
+                      Read more <Arrow />
+                    </Link>
+                  ) : (
+                    <a href="#contact" className="btn btn-primary">
+                      Read more <Arrow />
+                    </a>
+                  )}
                 </article>
               </Reveal>
             ))}
@@ -388,9 +396,18 @@ export default function Home() {
                   <a href="#contact" className={`btn ${plan.featured ? 'btn-white' : 'btn-primary'}`}>
                     Get started <Arrow />
                   </a>
-                  <a href="#services" className="learn-more">
-                    See all packages
-                  </a>
+                  <Link
+                    to={
+                      plan.name === 'Limited Company'
+                        ? '/formation/ltd-or-private-limited-company-formation-in-uk'
+                        : plan.name === 'LTD + Registered Office'
+                          ? '/formation/ltd-company-with-registered-office'
+                          : '/formation/ltd-companies-for-non-uk-residents'
+                    }
+                    className="learn-more"
+                  >
+                    View package details
+                  </Link>
                 </article>
               </Reveal>
             ))}
