@@ -217,9 +217,29 @@ img {
 }
 
 .btn-outline-light {
-  background: transparent;
+  background: #100036fa;
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: #fff;
+}
+
+.btn-outline-light:hover {
+  background: #fff;
+  color: #0f172a;
+  border-color: #fff;
+}
+
+.formation-cta .btn-outline,
+.formation-cta .btn-outline-light {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: #fff;
+}
+
+.formation-cta .btn-outline:hover,
+.formation-cta .btn-outline-light:hover {
+  background: #fff;
+  color: #0f172a;
+  border-color: #fff;
 }
 
 .btn-lg {
@@ -262,6 +282,10 @@ img {
   background: #fff;
   color: #c8102e;
   box-shadow: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .nav .nav-cta-btn:hover {
@@ -533,6 +557,19 @@ img {
 .nav-cta .btn {
   flex-shrink: 0;
   white-space: nowrap;
+}
+
+.nav-cta-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.nav-cta-actions .nav-cart-btn {
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .nav-cart-btn {
@@ -3984,14 +4021,18 @@ img {
   line-height: 1.65;
 }
 
-.formation-summary-card {
-  position: sticky;
-  top: 96px;
-  background: #05070c;
+.formation-summary-card .btn-outline,
+.formation-summary-card .btn-outline-light {
+  background: #100036fa;
   color: #fff;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: #fff;
+}
+
+.formation-summary-card .btn-outline:hover,
+.formation-summary-card .btn-outline-light:hover {
+  background: #fff;
+  color: #05070c;
+  border-color: #fff;
 }
 
 .formation-summary-kicker {
@@ -4046,7 +4087,7 @@ img {
 
 .formation-summary-total strong {
   font-size: 1.5rem;
-  color: #93c5fd;
+  color: #0078ff;
 }
 
 .formation-banks,
@@ -4611,6 +4652,21 @@ img {
 
 .vat-grid {
   grid-template-columns: 1fr 1fr;
+}
+
+.shelf-copy h2 {
+  margin: 0 0 14px;
+  color: var(--on-light-heading);
+}
+
+.shelf-copy p {
+  margin: 0 0 14px;
+  line-height: 1.7;
+}
+
+.shelf-copy a {
+  color: var(--blue-500);
+  word-break: break-word;
 }
 
 .shelf-need-list {

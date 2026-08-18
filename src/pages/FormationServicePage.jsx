@@ -238,7 +238,7 @@ export default function FormationServicePage() {
                 </div>
                 {orderError ? <p className="auth-error">{orderError}</p> : null}
                 {cartMessage ? <p className="auth-success">{cartMessage}</p> : null}
-                <button type="button" className="btn btn-outline btn-block" onClick={addToCart}>
+                <button type="button" className="btn btn-outline-light btn-block" onClick={addToCart}>
                   Add to cart
                 </button>
                 <button
@@ -349,7 +349,7 @@ export default function FormationServicePage() {
             <h2>Ready to form your company?</h2>
             <p>Start your order today — transparent pricing, no hidden charges, and free lifetime support.</p>
             <div className="hero-actions">
-              <button type="button" className="btn btn-outline btn-lg" onClick={addToCart}>
+              <button type="button" className="btn btn-outline-light btn-lg" onClick={addToCart}>
                 Add to cart
               </button>
               <button
