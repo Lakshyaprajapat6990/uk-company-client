@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { informationGuides, nav } from '../data/content.js'
 import { useAuth } from '../lib/auth.jsx'
+import { useCart } from '../lib/cart.jsx'
 
 const PhoneIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -22,6 +23,20 @@ const Arrow = () => (
 const Chevron = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+const CartIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="M6 6h15l-1.5 9h-12L5 3H2"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="9" cy="20" r="1.4" fill="currentColor" />
+    <circle cx="18" cy="20" r="1.4" fill="currentColor" />
   </svg>
 )
 
@@ -98,6 +113,7 @@ export default function Navbar() {
   const closeTimer = useRef(null)
   const location = useLocation()
   const { isAuthenticated } = useAuth()
+  const { count } = useCart()
 
   const clearCloseTimer = () => {
     if (closeTimer.current) {
@@ -262,16 +278,6 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <a href="#blogs" onClick={closeAll}>
-                  Blogs
-                </a>
-              </li>
-              <li>
-                <a href="#contact" onClick={closeAll}>
-                  Contact us
-                </a>
-              </li>
-              <li>
                 <Link to={isAuthenticated ? '/portal' : '/login'} onClick={closeAll}>
                   {isAuthenticated ? 'Portal' : 'Account'}
                 </Link>
@@ -291,6 +297,11 @@ export default function Navbar() {
                 <span>Int: +44 333-444-2222</span>
               </a>
             </div>
+            <Link to="/cart" className="nav-cart-btn" onClick={closeAll} aria-label="Open cart">
+              <CartIcon />
+              <span>Add to cart</span>
+              {count > 0 ? <em className="nav-cart-count">{count}</em> : null}
+            </Link>
             <Link to={isAuthenticated ? '/portal' : '/login'} className="btn btn-dark nav-cta-btn">
               {isAuthenticated ? 'My portal' : 'Account login'} <Arrow />
             </Link>
@@ -373,14 +384,9 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
-              <a href="#blogs" onClick={closeAll}>
-                Blogs
-              </a>
-            </li>
-            <li>
-              <a href="#contact" onClick={closeAll}>
-                Contact us
-              </a>
+              <Link to="/cart" onClick={closeAll}>
+                Add to cart{count > 0 ? ` (${count})` : ''}
+              </Link>
             </li>
             <li>
               <Link to={isAuthenticated ? '/portal' : '/login'} onClick={closeAll}>

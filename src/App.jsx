@@ -13,6 +13,7 @@ import OrderDetail from './pages/OrderDetail.jsx'
 import ExistingCompaniesPage from './pages/ExistingCompaniesPage.jsx'
 import ReserveCompanyPage from './pages/ReserveCompanyPage.jsx'
 import VatPage from './pages/VatPage.jsx'
+import Cart from './pages/Cart.jsx'
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/companies-for-sale" element={<ExistingCompaniesPage />} />
           <Route path="/companies-for-sale/:slug" element={<ReserveCompanyPage />} />
           <Route path="/vat" element={<VatPage />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

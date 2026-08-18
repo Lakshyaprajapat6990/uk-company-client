@@ -4,16 +4,19 @@ import Reveal from '../components/Reveal.jsx'
 import { CH_VERIFICATION_FEE, formatGbp, getExistingCompany } from '../data/existingCompanies.js'
 import { useAuth } from '../lib/auth.jsx'
 import { PENDING_SHELF_KEY, shelfApi } from '../lib/api.js'
+import { useCart } from '../lib/cart.jsx'
 
 export default function ReserveCompanyPage() {
   const { slug } = useParams()
   const listed = getExistingCompany(slug)
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
+  const { addItem } = useCart()
   const [company, setCompany] = useState(listed || null)
   const [wantsVerificationService, setWantsVerificationService] = useState(false)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [cartMessage, setCartMessage] = useState('')
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -50,6 +53,18 @@ export default function ReserveCompanyPage() {
     } finally {
       setBusy(false)
     }
+  }
+
+  function addToCart() {
+    addItem({
+      id: `shelf:${display.slug}`,
+      type: 'shelf',
+      slug: display.slug,
+      title: display.name,
+      price: total,
+      href: `/companies-for-sale/${display.slug}`,
+    })
+    setCartMessage('Added to cart')
   }
 
   return (
@@ -131,12 +146,18 @@ export default function ReserveCompanyPage() {
               <strong>{formatGbp(total)}</strong>
             </div>
             {error ? <p className="auth-error">{error}</p> : null}
+            {cartMessage ? <p className="auth-success">{cartMessage}</p> : null}
             {!available ? (
               <p className="shelf-sold">This company is no longer available.</p>
             ) : (
-              <button type="button" className="btn btn-primary btn-block" disabled={busy} onClick={reserve}>
-                {busy ? 'Reserving...' : 'Reserve this company'}
-              </button>
+              <>
+                <button type="button" className="btn btn-outline btn-block" onClick={addToCart}>
+                  Add to cart
+                </button>
+                <button type="button" className="btn btn-primary btn-block" disabled={busy} onClick={reserve}>
+                  {busy ? 'Reserving...' : 'Reserve this company'}
+                </button>
+              </>
             )}
             <p className="shelf-fineprint">
               Reservation collects your details. A proforma invoice follows after ID checks.

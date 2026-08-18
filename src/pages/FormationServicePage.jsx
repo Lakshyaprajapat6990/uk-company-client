@@ -11,6 +11,7 @@ import {
 } from '../data/formationPages.js'
 import { useAuth } from '../lib/auth.jsx'
 import { ordersApi, PENDING_ORDER_KEY } from '../lib/api.js'
+import { useCart } from '../lib/cart.jsx'
 
 const ADDON_SLUG_MAP = {
   'registered-office': 'registered-office-addon',
@@ -49,8 +50,10 @@ export default function FormationServicePage() {
   const page = getFormationPage(slug)
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
+  const { addItem } = useCart()
   const [orderError, setOrderError] = useState('')
   const [orderBusy, setOrderBusy] = useState(false)
+  const [cartMessage, setCartMessage] = useState('')
 
   const availableAddons = useMemo(() => {
     if (!page) return []
@@ -63,6 +66,7 @@ export default function FormationServicePage() {
     window.scrollTo(0, 0)
     setSelectedAddons(new Set())
     setOrderError('')
+    setCartMessage('')
   }, [slug])
 
   if (!page) {
@@ -108,6 +112,18 @@ export default function FormationServicePage() {
     } finally {
       setOrderBusy(false)
     }
+  }
+
+  function addToCart() {
+    addItem({
+      id: `formation:${page.slug}`,
+      type: 'formation',
+      slug: page.slug,
+      title: page.title,
+      price: total,
+      href: `/formation/${page.slug}`,
+    })
+    setCartMessage('Added to cart')
   }
 
   return (
@@ -221,6 +237,10 @@ export default function FormationServicePage() {
                   <strong>{formatPrice(total)}</strong>
                 </div>
                 {orderError ? <p className="auth-error">{orderError}</p> : null}
+                {cartMessage ? <p className="auth-success">{cartMessage}</p> : null}
+                <button type="button" className="btn btn-outline btn-block" onClick={addToCart}>
+                  Add to cart
+                </button>
                 <button
                   type="button"
                   className="btn btn-primary btn-block"
@@ -329,6 +349,9 @@ export default function FormationServicePage() {
             <h2>Ready to form your company?</h2>
             <p>Start your order today — transparent pricing, no hidden charges, and free lifetime support.</p>
             <div className="hero-actions">
+              <button type="button" className="btn btn-outline btn-lg" onClick={addToCart}>
+                Add to cart
+              </button>
               <button
                 type="button"
                 className="btn btn-primary btn-lg"
