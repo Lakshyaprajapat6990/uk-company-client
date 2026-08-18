@@ -128,6 +128,9 @@ export default function Navbar() {
     setOpen(false)
     setMenu(null)
     setHoverLocked(true)
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
   }
 
   useEffect(() => {
@@ -141,7 +144,11 @@ export default function Navbar() {
     clearCloseTimer()
     setMenu(null)
     setOpen(false)
-  }, [location.pathname])
+    setHoverLocked(true)
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
+  }, [location.pathname, location.search])
 
   useEffect(() => () => clearCloseTimer(), [])
 
@@ -172,15 +179,17 @@ export default function Navbar() {
                     ▾
                   </span>
                 </button>
-                <MegaMenu
-                  items={nav.companyFormations}
-                  slugRoutePrefix="formation"
-                  image="/hero-professional.jpg"
-                  imageAlt="Professional ready to help with company formation"
-                  onNavigate={closeAll}
-                  onStayOpen={() => openMenu('formations')}
-                  onLeave={scheduleClose}
-                />
+                {menu === 'formations' ? (
+                  <MegaMenu
+                    items={nav.companyFormations}
+                    slugRoutePrefix="formation"
+                    image="/hero-professional.jpg"
+                    imageAlt="Professional ready to help with company formation"
+                    onNavigate={closeAll}
+                    onStayOpen={() => openMenu('formations')}
+                    onLeave={scheduleClose}
+                  />
+                ) : null}
               </li>
 
               <li
@@ -199,15 +208,17 @@ export default function Navbar() {
                     ▾
                   </span>
                 </button>
-                <MegaMenu
-                  items={nav.additionalServices}
-                  slugRoutePrefix="additional"
-                  image="/section-team.jpg"
-                  imageAlt="Additional company services"
-                  onNavigate={closeAll}
-                  onStayOpen={() => openMenu('additional')}
-                  onLeave={scheduleClose}
-                />
+                {menu === 'additional' ? (
+                  <MegaMenu
+                    items={nav.additionalServices}
+                    slugRoutePrefix="additional"
+                    image="/section-team.jpg"
+                    imageAlt="Additional company services"
+                    onNavigate={closeAll}
+                    onStayOpen={() => openMenu('additional')}
+                    onLeave={scheduleClose}
+                  />
+                ) : null}
               </li>
 
               <li
@@ -226,16 +237,18 @@ export default function Navbar() {
                     ▾
                   </span>
                 </button>
-                <MegaMenu
-                  items={informationGuides}
-                  slugRoutePrefix="info"
-                  image="/hero-professional.jpg"
-                  imageAlt="Company formation information guides"
-                  linkPrefix="#info"
-                  onNavigate={closeAll}
-                  onStayOpen={() => openMenu('information')}
-                  onLeave={scheduleClose}
-                />
+                {menu === 'information' ? (
+                  <MegaMenu
+                    items={informationGuides}
+                    slugRoutePrefix="info"
+                    image="/hero-professional.jpg"
+                    imageAlt="Company formation information guides"
+                    linkPrefix="#info"
+                    onNavigate={closeAll}
+                    onStayOpen={() => openMenu('information')}
+                    onLeave={scheduleClose}
+                  />
+                ) : null}
               </li>
 
               <li>

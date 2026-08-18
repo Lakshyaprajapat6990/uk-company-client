@@ -380,8 +380,7 @@ img {
   height: 80px;
 }
 
-.has-mega.is-open .mega-panel,
-.has-mega:focus-within .mega-panel {
+.has-mega.is-open .mega-panel {
   display: block;
 }
 
