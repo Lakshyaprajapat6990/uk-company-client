@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import {
   bankPartners,
@@ -9,6 +9,24 @@ import {
   optionalFreeServices,
   whatsIncludedDefault,
 } from '../data/formationPages.js'
+import { useAuth } from '../lib/auth.jsx'
+import { ordersApi, PENDING_ORDER_KEY } from '../lib/api.js'
+
+const ADDON_SLUG_MAP = {
+  'registered-office': 'registered-office-addon',
+  'printed-certificates': 'printed-certificates',
+  'vat-registration': 'vat-registration-addon',
+  'confirmation-statement': 'confirmation-statement-addon',
+}
+
+function buildFormationOrderPayload(page, selectedAddons) {
+  const items = [{ slug: page.slug }]
+  for (const id of selectedAddons) {
+    const slug = ADDON_SLUG_MAP[id] || id
+    items.push({ slug })
+  }
+  return { items, companyName: '' }
+}
 
 const Arrow = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -29,6 +47,10 @@ function formatPrice(amount) {
 export default function FormationServicePage() {
   const { slug } = useParams()
   const page = getFormationPage(slug)
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
+  const [orderError, setOrderError] = useState('')
+  const [orderBusy, setOrderBusy] = useState(false)
 
   const availableAddons = useMemo(() => {
     if (!page) return []
@@ -40,6 +62,7 @@ export default function FormationServicePage() {
   useEffect(() => {
     window.scrollTo(0, 0)
     setSelectedAddons(new Set())
+    setOrderError('')
   }, [slug])
 
   if (!page) {
@@ -65,6 +88,27 @@ export default function FormationServicePage() {
   const total = subtotal - discount
 
   const bundledAddonDetails = formationAddons.filter((addon) => page.bundledAddons.includes(addon.id))
+
+  async function saveAndContinue() {
+    setOrderError('')
+    const payload = buildFormationOrderPayload(page, selectedAddons)
+
+    if (!isAuthenticated) {
+      sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify(payload))
+      navigate('/login', { state: { from: '/portal' } })
+      return
+    }
+
+    setOrderBusy(true)
+    try {
+      const data = await ordersApi.create(payload)
+      navigate(`/portal/orders/${data.order._id}`)
+    } catch (err) {
+      setOrderError(err.message)
+    } finally {
+      setOrderBusy(false)
+    }
+  }
 
   return (
     <>
@@ -176,9 +220,15 @@ export default function FormationServicePage() {
                   <span>Total order</span>
                   <strong>{formatPrice(total)}</strong>
                 </div>
-                <a href="#contact" className="btn btn-primary btn-block">
-                  Save &amp; Continue <Arrow />
-                </a>
+                {orderError ? <p className="auth-error">{orderError}</p> : null}
+                <button
+                  type="button"
+                  className="btn btn-primary btn-block"
+                  disabled={orderBusy}
+                  onClick={saveAndContinue}
+                >
+                  {orderBusy ? 'Creating order...' : 'Save & Continue'} <Arrow />
+                </button>
               </div>
             </Reveal>
           </aside>
@@ -279,9 +329,14 @@ export default function FormationServicePage() {
             <h2>Ready to form your company?</h2>
             <p>Start your order today — transparent pricing, no hidden charges, and free lifetime support.</p>
             <div className="hero-actions">
-              <a href="#contact" className="btn btn-primary btn-lg">
-                Save &amp; Continue <Arrow />
-              </a>
+              <button
+                type="button"
+                className="btn btn-primary btn-lg"
+                disabled={orderBusy}
+                onClick={saveAndContinue}
+              >
+                {orderBusy ? 'Creating order...' : 'Save & Continue'} <Arrow />
+              </button>
               <Link to="/#services" className="btn btn-outline btn-lg">
                 View all packages <Arrow />
               </Link>

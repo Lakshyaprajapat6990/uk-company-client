@@ -61,8 +61,8 @@ export const informationGuides = [
 
 export const nav = {
   topLinks: [
-    { label: 'Account login', href: '#' },
-    { label: 'Post Login', href: '#' },
+    { label: 'Account login', href: '/login' },
+    { label: 'Customer portal', href: '/portal' },
     { label: 'Contact us', href: '#contact' },
   ],
   companyFormations: formationNavItems,
@@ -429,6 +429,8 @@ export const footer = {
       title: 'Our Services',
       links: [
         { label: 'Company Formations', href: '#services' },
+        { label: 'Companies for sale', href: '/companies-for-sale' },
+        { label: 'VAT', href: '/vat' },
         { label: 'Additional Services', href: '#services' },
         { label: 'Packages & Pricing', href: '#prices' },
       ],

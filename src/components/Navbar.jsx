@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { informationGuides, nav } from '../data/content.js'
+import { useAuth } from '../lib/auth.jsx'
 
 const PhoneIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -30,7 +31,16 @@ function chunk(arr, size) {
   return out
 }
 
-function MegaMenu({ items, image, imageAlt, onNavigate, linkPrefix = '#services', slugRoutePrefix = null }) {
+function MegaMenu({
+  items,
+  image,
+  imageAlt,
+  onNavigate,
+  onStayOpen,
+  onLeave,
+  linkPrefix = '#services',
+  slugRoutePrefix = null,
+}) {
   const columns = chunk(items, Math.ceil(items.length / 3) || 1)
 
   const renderLink = (item) => {
@@ -56,7 +66,12 @@ function MegaMenu({ items, image, imageAlt, onNavigate, linkPrefix = '#services'
   }
 
   return (
-    <div className="mega-panel" role="region">
+    <div
+      className="mega-panel"
+      role="region"
+      onMouseEnter={onStayOpen}
+      onMouseLeave={onLeave}
+    >
       <div className="container mega-inner">
         <div className="mega-media">
           <img src={image} alt={imageAlt} />
@@ -79,11 +94,40 @@ function MegaMenu({ items, image, imageAlt, onNavigate, linkPrefix = '#services'
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [menu, setMenu] = useState(null)
+  const [hoverLocked, setHoverLocked] = useState(false)
+  const closeTimer = useRef(null)
+  const location = useLocation()
+  const { isAuthenticated } = useAuth()
 
-  const toggleMenu = (key) => setMenu((m) => (m === key ? null : key))
+  const clearCloseTimer = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current)
+      closeTimer.current = null
+    }
+  }
+
+  const openMenu = (key) => {
+    if (hoverLocked) return
+    clearCloseTimer()
+    setMenu(key)
+  }
+
+  const scheduleClose = () => {
+    clearCloseTimer()
+    closeTimer.current = setTimeout(() => setMenu(null), 200)
+  }
+
+  const toggleMenu = (key) => {
+    clearCloseTimer()
+    setHoverLocked(false)
+    setMenu((m) => (m === key ? null : key))
+  }
+
   const closeAll = () => {
+    clearCloseTimer()
     setOpen(false)
     setMenu(null)
+    setHoverLocked(true)
   }
 
   useEffect(() => {
@@ -93,6 +137,14 @@ export default function Navbar() {
     }
   }, [open])
 
+  useEffect(() => {
+    clearCloseTimer()
+    setMenu(null)
+    setOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => () => clearCloseTimer(), [])
+
   return (
     <>
       <header className={`nav ${open ? 'nav--open' : ''}`}>
@@ -100,11 +152,14 @@ export default function Navbar() {
           <Logo header light />
 
           <nav className="nav-desktop" aria-label="Main">
-            <ul className="nav-links">
+            <ul
+              className="nav-links"
+              onMouseLeave={() => setHoverLocked(false)}
+            >
               <li
-                className="has-mega"
-                onMouseEnter={() => setMenu('formations')}
-                onMouseLeave={() => setMenu(null)}
+                className={`has-mega ${menu === 'formations' ? 'is-open' : ''}`}
+                onMouseEnter={() => openMenu('formations')}
+                onMouseLeave={scheduleClose}
               >
                 <button
                   type="button"
@@ -123,13 +178,15 @@ export default function Navbar() {
                   image="/hero-professional.jpg"
                   imageAlt="Professional ready to help with company formation"
                   onNavigate={closeAll}
+                  onStayOpen={() => openMenu('formations')}
+                  onLeave={scheduleClose}
                 />
               </li>
 
               <li
-                className="has-mega"
-                onMouseEnter={() => setMenu('additional')}
-                onMouseLeave={() => setMenu(null)}
+                className={`has-mega ${menu === 'additional' ? 'is-open' : ''}`}
+                onMouseEnter={() => openMenu('additional')}
+                onMouseLeave={scheduleClose}
               >
                 <button
                   type="button"
@@ -148,13 +205,15 @@ export default function Navbar() {
                   image="/section-team.jpg"
                   imageAlt="Additional company services"
                   onNavigate={closeAll}
+                  onStayOpen={() => openMenu('additional')}
+                  onLeave={scheduleClose}
                 />
               </li>
 
               <li
-                className="has-mega"
-                onMouseEnter={() => setMenu('information')}
-                onMouseLeave={() => setMenu(null)}
+                className={`has-mega ${menu === 'information' ? 'is-open' : ''}`}
+                onMouseEnter={() => openMenu('information')}
+                onMouseLeave={scheduleClose}
               >
                 <button
                   type="button"
@@ -174,9 +233,21 @@ export default function Navbar() {
                   imageAlt="Company formation information guides"
                   linkPrefix="#info"
                   onNavigate={closeAll}
+                  onStayOpen={() => openMenu('information')}
+                  onLeave={scheduleClose}
                 />
               </li>
 
+              <li>
+                <Link to="/companies-for-sale" onClick={closeAll}>
+                  Companies for sale
+                </Link>
+              </li>
+              <li>
+                <Link to="/vat" onClick={closeAll}>
+                  VAT
+                </Link>
+              </li>
               <li>
                 <a href="#blogs" onClick={closeAll}>
                   Blogs
@@ -186,6 +257,11 @@ export default function Navbar() {
                 <a href="#contact" onClick={closeAll}>
                   Contact us
                 </a>
+              </li>
+              <li>
+                <Link to={isAuthenticated ? '/portal' : '/login'} onClick={closeAll}>
+                  {isAuthenticated ? 'Portal' : 'Account'}
+                </Link>
               </li>
             </ul>
           </nav>
@@ -202,9 +278,9 @@ export default function Navbar() {
                 <span>Int: +44 333-444-2222</span>
               </a>
             </div>
-            <a href="mailto:info@uk.company" className="btn btn-dark nav-cta-btn">
-              Get in touch <Arrow />
-            </a>
+            <Link to={isAuthenticated ? '/portal' : '/login'} className="btn btn-dark nav-cta-btn">
+              {isAuthenticated ? 'My portal' : 'Account login'} <Arrow />
+            </Link>
             <button
               className={`nav-toggle ${open ? 'is-open' : ''}`}
               aria-label={open ? 'Close menu' : 'Open menu'}
@@ -274,6 +350,16 @@ export default function Navbar() {
               </ul>
             </li>
             <li>
+              <Link to="/companies-for-sale" onClick={closeAll}>
+                Companies for sale
+              </Link>
+            </li>
+            <li>
+              <Link to="/vat" onClick={closeAll}>
+                VAT
+              </Link>
+            </li>
+            <li>
               <a href="#blogs" onClick={closeAll}>
                 Blogs
               </a>
@@ -282,6 +368,11 @@ export default function Navbar() {
               <a href="#contact" onClick={closeAll}>
                 Contact us
               </a>
+            </li>
+            <li>
+              <Link to={isAuthenticated ? '/portal' : '/login'} onClick={closeAll}>
+                {isAuthenticated ? 'My portal' : 'Account login'}
+              </Link>
             </li>
           </ul>
 
@@ -294,9 +385,13 @@ export default function Navbar() {
               <PhoneIcon />
               <span>Int: +44 333-444-2222</span>
             </a>
-            <a href="mailto:info@uk.company" className="btn btn-dark btn-block" onClick={closeAll}>
-              Get in touch <Arrow />
-            </a>
+            <Link
+              to={isAuthenticated ? '/portal' : '/login'}
+              className="btn btn-dark btn-block"
+              onClick={closeAll}
+            >
+              {isAuthenticated ? 'My portal' : 'Account login'} <Arrow />
+            </Link>
           </div>
         </div>
       </div>
