@@ -18,6 +18,7 @@ import Cart from './pages/Cart.jsx'
 export default function App() {
   return (
     <div className="site">
+      <div className="site-watermark" aria-hidden="true" />
       <Navbar />
       <main>
         <Routes>

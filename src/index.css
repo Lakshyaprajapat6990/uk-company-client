@@ -255,10 +255,11 @@ img {
 .nav {
   position: sticky;
   top: 0;
-  z-index: 60;
+  z-index: 100;
   background: #c8102e;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 8px 28px rgba(140, 10, 30, 0.28);
+  overflow: visible;
 }
 
 .nav .nav-links > li > a,
@@ -316,6 +317,7 @@ img {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .nav-desktop {
@@ -323,35 +325,42 @@ img {
   align-items: center;
   min-width: 0;
   flex: 1 1 auto;
+  overflow: visible;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 2px;
-  margin-left: 4px;
+  justify-content: center;
+  gap: 4px;
+  margin-left: 8px;
   list-style: none;
   padding: 0;
   flex-wrap: nowrap;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .nav-links > li > a,
 .nav-links > li > button {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #d7e3f8;
   transition: color 0.15s ease, background 0.15s ease;
   background: none;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
-  padding: 8px 10px;
+  padding: 10px 12px;
   font-family: inherit;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   white-space: nowrap;
   border-radius: 8px;
+  line-height: 1.2;
+  min-height: 42px;
+  text-align: center;
 }
 
 .nav-chev {
@@ -387,7 +396,7 @@ img {
   left: 0;
   right: 0;
   top: 100%;
-  z-index: 70;
+  z-index: 200;
   background: #05070c;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
@@ -686,8 +695,8 @@ img {
 }
 
 .logo--header {
-  width: 220px;
-  height: 84px;
+  width: 280px;
+  height: 108px;
 }
 
 .logo--header img {
@@ -697,8 +706,8 @@ img {
 }
 
 .logo--light {
-  width: 220px;
-  height: 84px;
+  width: 280px;
+  height: 108px;
 }
 
 .logo--light img {
@@ -707,19 +716,190 @@ img {
   filter: none;
 }
 
-/* Same logo size in header and footer */
+/* Same logo size in header and footer — larger per client request */
 .nav .logo--header,
 .nav .logo--light,
 .calcue-footer .logo--header,
 .calcue-footer .logo--light {
-  width: 280px;
-  height: 108px;
+  width: 360px;
+  height: 138px;
 }
 
 .calcue-footer .logo--light img {
   filter: none;
   object-fit: contain;
   object-position: left center;
+}
+
+.site {
+  position: relative;
+}
+
+.site-watermark {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/new_Logo.png');
+  background-repeat: repeat;
+  background-size: 220px auto;
+  opacity: 0.035;
+}
+
+.site > .nav,
+.site > main,
+.site > .footer {
+  position: relative;
+  z-index: 1;
+}
+
+.site > .nav {
+  z-index: 100;
+}
+
+.hero-rotator-wrap {
+  justify-self: stretch;
+}
+
+.hero-rotator {
+  background: rgba(5, 7, 12, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 28px 26px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-rotator-kicker {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  font-weight: 700;
+}
+
+.hero-rotator h2 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  line-height: 1.2;
+}
+
+.hero-rotator p {
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+}
+
+.hero-rotator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.hero-rotator-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.hero-rotator-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.hero-rotator-dots button.is-active {
+  background: #fff;
+}
+
+.offers-section {
+  padding: 64px 0;
+  background: linear-gradient(180deg, #0a1630 0%, #061431 100%);
+  color: #fff;
+}
+
+.offers-section .center-title,
+.offers-section .prices-lead {
+  color: #fff;
+}
+
+.offers-section .prices-lead {
+  opacity: 0.8;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.offer-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.offer-card h3 {
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.offer-card p {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.6;
+}
+
+.offer-badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #c8102e;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.packages-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.packages-window .price-card {
+  min-height: 100%;
+}
+
+@media (max-width: 900px) {
+  .offers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .packages-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .packages-cta-row .btn {
+    width: 100%;
+  }
 }
 
 /* ---------- Hero ---------- */
@@ -744,9 +924,9 @@ img {
   bottom: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/hero-bg.png');
+  background-image: url('/london-skyline.jpg');
   background-size: cover;
-  background-position: right center;
+  background-position: center center;
   background-repeat: no-repeat;
   z-index: 0;
 }
@@ -757,10 +937,10 @@ img {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(3, 11, 26, 0.92) 0%,
-    rgba(6, 20, 49, 0.78) 42%,
-    rgba(6, 20, 49, 0.35) 68%,
-    rgba(6, 20, 49, 0.15) 100%
+    rgba(3, 11, 26, 0.88) 0%,
+    rgba(6, 20, 49, 0.72) 45%,
+    rgba(6, 20, 49, 0.45) 70%,
+    rgba(6, 20, 49, 0.28) 100%
   );
 }
 
@@ -768,7 +948,8 @@ img {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  gap: 28px;
   width: 100%;
   height: 100%;
   align-items: center;
@@ -2968,19 +3149,19 @@ img {
   .nav .logo--light,
   .calcue-footer .logo--header,
   .calcue-footer .logo--light {
-    width: 200px;
-    height: 78px;
+    width: 300px;
+    height: 116px;
   }
 
   .nav-inner {
-    min-height: 96px;
+    min-height: 108px;
     gap: 10px;
   }
 
   .nav-links > li > a,
   .nav-links > li > button {
-    font-size: 1rem;
-    padding: 8px 8px;
+    font-size: 0.9rem;
+    padding: 10px 10px;
   }
 
   .nav-phone {
@@ -3197,11 +3378,16 @@ img {
   .hero-grid {
     height: auto !important;
     min-height: unset !important;
+    grid-template-columns: 1fr;
   }
 
   .hero-copy {
     max-width: min(440px, 100%);
     padding: 36px 0;
+  }
+
+  .offers-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
   .hero-actions {
@@ -3323,10 +3509,11 @@ img {
     height: auto !important;
     min-height: inherit;
     align-items: center;
+    grid-template-columns: 1fr;
   }
 
   .hero-bg {
-    background-position: 78% center;
+    background-position: center center;
     background-size: cover;
   }
 
@@ -3469,10 +3656,11 @@ img {
     min-height: inherit;
     align-items: center;
     width: 100%;
+    grid-template-columns: 1fr;
   }
 
   .hero-bg {
-    background-position: 68% 18%;
+    background-position: center 30%;
     background-size: cover;
   }
 

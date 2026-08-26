@@ -135,14 +135,14 @@ export default function Navbar() {
   }
 
   const openMenu = (key) => {
-    if (hoverLocked) return
     clearCloseTimer()
+    setHoverLocked(false)
     setMenu(key)
   }
 
   const scheduleClose = () => {
     clearCloseTimer()
-    closeTimer.current = setTimeout(() => setMenu(null), 200)
+    closeTimer.current = setTimeout(() => setMenu(null), 220)
   }
 
   const toggleMenu = (key) => {
@@ -155,7 +155,7 @@ export default function Navbar() {
     clearCloseTimer()
     setOpen(false)
     setMenu(null)
-    setHoverLocked(true)
+    setHoverLocked(false)
     if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
       document.activeElement.blur()
     }
@@ -168,11 +168,14 @@ export default function Navbar() {
     }
   }, [open])
 
+  const firstPath = useRef(location.pathname)
   useEffect(() => {
+    if (firstPath.current === location.pathname) return
+    firstPath.current = location.pathname
     clearCloseTimer()
     setMenu(null)
     setOpen(false)
-    setHoverLocked(true)
+    setHoverLocked(false)
     if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
       document.activeElement.blur()
     }
@@ -211,8 +214,8 @@ export default function Navbar() {
                   <MegaMenu
                     items={nav.companyFormations}
                     slugRoutePrefix="formation"
-                    image="/hero-professional.jpg"
-                    imageAlt="Professional ready to help with company formation"
+                    image="/london-skyline.jpg"
+                    imageAlt="London skyline"
                     onNavigate={closeAll}
                     onStayOpen={() => openMenu('formations')}
                     onLeave={scheduleClose}
@@ -269,8 +272,8 @@ export default function Navbar() {
                   <MegaMenu
                     items={informationGuides}
                     slugRoutePrefix="info"
-                    image="/hero-professional.jpg"
-                    imageAlt="Company formation information guides"
+                    image="/london-skyline.jpg"
+                    imageAlt="London skyline business district"
                     linkPrefix="#info"
                     onNavigate={closeAll}
                     onStayOpen={() => openMenu('information')}

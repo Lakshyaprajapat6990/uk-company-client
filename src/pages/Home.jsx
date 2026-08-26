@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import HeroRotator from '../components/HeroRotator.jsx'
 import { getFormationSlugByTitle } from '../data/formationPages.js'
 import {
   agentBenefits,
@@ -61,6 +62,27 @@ const ServiceIcon = ({ name }) => {
 
 const newsImages = ['/news-1.jpg', '/news-2.jpg', '/news-3.jpg']
 
+const specialOffers = [
+  {
+    title: 'Formation from £107',
+    text: 'Limited company ready to trade — Companies House fee included.',
+    badge: 'Popular',
+    to: '/formation/ltd-or-private-limited-company-formation-in-uk',
+  },
+  {
+    title: 'Shelf companies from £595',
+    text: 'Buy an existing UK company. Reserve first, pay after ID approval.',
+    badge: 'For sale',
+    to: '/companies-for-sale',
+  },
+  {
+    title: 'VAT registration from £26',
+    text: 'Add VAT registration when you form, or use our VAT service page.',
+    badge: 'Add-on',
+    to: '/vat',
+  },
+]
+
 const featuredPlans = [
   {
     name: 'Limited Company',
@@ -104,13 +126,46 @@ export default function Home() {
             <h1>You run your business. We&apos;ll form your company.</h1>
             <p className="hero-sub">Register a company and apply for a bank account today.</p>
             <div className="hero-actions">
-              <a href="#prices" className="btn btn-primary btn-lg">
-                Start formation <Arrow />
-              </a>
-              <a href="#services" className="btn btn-outline hero-btn-secondary">
-                View packages <Arrow />
+              <Link to="/formation/ltd-or-private-limited-company-formation-in-uk" className="btn btn-primary btn-lg">
+                Start formation
+              </Link>
+              <Link to="/companies-for-sale" className="btn btn-outline-light btn-lg">
+                Companies for sale
+              </Link>
+              <a href="#prices" className="btn btn-outline hero-btn-secondary">
+                View packages
               </a>
             </div>
+          </div>
+          <div className="hero-rotator-wrap animate-in">
+            <HeroRotator />
+          </div>
+        </div>
+      </section>
+
+      {/* SPECIAL OFFERS */}
+      <section className="offers-section" id="offers">
+        <div className="container">
+          <Reveal variant="top">
+            <p className="section-label center">Special offers</p>
+            <h2 className="center-title">Discount packs and rotating deals</h2>
+            <p className="prices-lead">
+              Clear calls to action — form a new company, reserve a shelf company, or add VAT in one click.
+            </p>
+          </Reveal>
+          <div className="offers-grid">
+            {specialOffers.map((offer, i) => (
+              <Reveal key={offer.title} delay={i * 100} variant="popup">
+                <article className="offer-card">
+                  <span className="offer-badge">{offer.badge}</span>
+                  <h3>{offer.title}</h3>
+                  <p>{offer.text}</p>
+                  <Link to={offer.to} className="btn btn-primary">
+                    Get this offer
+                  </Link>
+                </article>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -169,7 +224,7 @@ export default function Home() {
             </ul>
           </Reveal>
           <Reveal className="split-media" variant="right" delay={160}>
-            <img src="/section-team.jpg" alt="Professional consultants reviewing company documents" />
+            <img src="/london-skyline.jpg" alt="London skyline" />
           </Reveal>
         </div>
       </section>
@@ -365,12 +420,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRICES */}
-      <section className="prices-section" id="prices">
+      {/* PACKAGES WINDOW */}
+      <section className="prices-section packages-window" id="prices">
         <div className="container">
           <Reveal variant="top">
-            <p className="section-label center">Prices</p>
-            <h2 className="center-title">Clear formation packages from £107</h2>
+            <p className="section-label center">Packages</p>
+            <h2 className="center-title">Formation packages window</h2>
             <p className="prices-lead">
               No hidden charges. Pick the pack that fits your business — Limited Company, privacy address, or non-UK
               resident formation.
@@ -393,9 +448,6 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <a href="#contact" className={`btn ${plan.featured ? 'btn-white' : 'btn-primary'}`}>
-                    Get started <Arrow />
-                  </a>
                   <Link
                     to={
                       plan.name === 'Limited Company'
@@ -404,14 +456,28 @@ export default function Home() {
                           ? '/formation/ltd-company-with-registered-office'
                           : '/formation/ltd-companies-for-non-uk-residents'
                     }
-                    className="learn-more"
+                    className={`btn ${plan.featured ? 'btn-white' : 'btn-primary'}`}
                   >
-                    View package details
+                    Order this package
+                  </Link>
+                  <Link to="/cart" className="learn-more">
+                    Add via cart
                   </Link>
                 </article>
               </Reveal>
             ))}
           </div>
+          <Reveal className="packages-cta-row" delay={200} variant="popup">
+            <Link to="/companies-for-sale" className="btn btn-primary btn-lg">
+              Browse companies for sale
+            </Link>
+            <Link to="/vat" className="btn btn-outline btn-lg">
+              VAT services
+            </Link>
+            <a href="tel:03334442222" className="btn btn-outline btn-lg">
+              Call 0333-444-2222
+            </a>
+          </Reveal>
         </div>
       </section>
 
