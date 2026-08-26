@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import HeroRotator from '../components/HeroRotator.jsx'
+import HeroBackground from '../components/HeroBackground.jsx'
 import { getFormationSlugByTitle } from '../data/formationPages.js'
 import {
   agentBenefits,
@@ -117,7 +118,7 @@ export default function Home() {
     <>
       {/* HERO */}
       <section className="hero" aria-label="Welcome">
-        <div className="hero-bg" aria-hidden="true" />
+        <HeroBackground />
         <div className="container hero-grid">
           <div className="hero-copy animate-in">
             <p className="brand-kicker">
