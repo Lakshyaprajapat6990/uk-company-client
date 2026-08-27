@@ -204,3 +204,41 @@ export function getExistingCompany(slug) {
 export function formatGbp(amount) {
   return `£${Number(amount).toFixed(0)}`
 }
+
+export const shelfFaqs = [
+  {
+    q: 'What is an ACSP?',
+    a: 'An Authorised Corporate Service Provider (ACSP) is a professional authorised by Companies House to carry out identity checks and file company information on behalf of clients.',
+    bullets: [
+      'We are Companies House authorised (ACSP) and HMRC supervised for anti-money laundering.',
+      'Identity checks are required before any ready-made company can be transferred.',
+      'We handle the filing and transfer process for you after checks are complete.',
+    ],
+  },
+  {
+    q: 'What is a ready-made company?',
+    a: 'A ready-made (shelf) company is an existing UK limited company that has already been incorporated and is available for purchase, so you can start trading sooner without waiting for a brand-new formation.',
+  },
+  {
+    q: 'What is included when I buy a company for sale?',
+    a: 'Each listing typically includes:',
+    bullets: [
+      'The company name and Companies House registration number',
+      'Registered office address included',
+      'Service address included',
+      'Transfer of ownership after identity checks and payment',
+    ],
+  },
+  {
+    q: 'How does buying a company work?',
+    a: 'Choose a company, click Buy Now to reserve it, complete your details and ID upload, then we review and issue a proforma invoice. After bank payment clears, we complete the transfer.',
+  },
+  {
+    q: 'How long does the transfer take?',
+    a: 'Once identity checks are approved and payment is received, we aim to complete the ownership transfer promptly. Timing can vary depending on Companies House processing and the completeness of your documents.',
+  },
+  {
+    q: 'Can I enquire before buying?',
+    a: 'Yes. Use Enquire now on any listing to send us your questions. Our team will reply as soon as possible with the details you need.',
+  },
+]
