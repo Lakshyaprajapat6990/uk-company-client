@@ -391,10 +391,7 @@ img {
 }
 
 .mega-panel {
-  display: block;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
+  display: none;
   position: absolute;
   left: 0;
   right: 0;
@@ -406,21 +403,18 @@ img {
   padding: 28px 0 32px;
 }
 
-/* Invisible bridge covering the tall header so hover does not drop between label and panel */
+/* Invisible bridge covering the space between the header label and the list */
 .mega-panel::before {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  top: -140px;
-  height: 140px;
+  top: -80px;
+  height: 80px;
 }
 
-.has-mega.is-open .mega-panel,
-.mega-panel.is-open {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
+.has-mega.is-open .mega-panel {
+  display: block;
 }
 
 .mega-inner {

@@ -63,7 +63,8 @@ function MegaMenu({
   image,
   imageAlt,
   onNavigate,
-  open,
+  onStayOpen,
+  onLeave,
   linkPrefix = '#services',
   slugRoutePrefix = null,
 }) {
@@ -93,9 +94,10 @@ function MegaMenu({
 
   return (
     <div
-      className={`mega-panel ${open ? 'is-open' : ''}`}
+      className="mega-panel"
       role="region"
-      aria-hidden={!open}
+      onMouseEnter={onStayOpen}
+      onMouseLeave={onLeave}
     >
       <div className="container mega-inner">
         <div className="mega-media">
@@ -119,6 +121,7 @@ function MegaMenu({
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [menu, setMenu] = useState(null)
+  const [hoverLocked, setHoverLocked] = useState(false)
   const closeTimer = useRef(null)
   const location = useLocation()
   const { isAuthenticated } = useAuth()
@@ -133,21 +136,18 @@ export default function Navbar() {
 
   const openMenu = (key) => {
     clearCloseTimer()
+    setHoverLocked(false)
     setMenu(key)
   }
 
   const scheduleClose = () => {
     clearCloseTimer()
-    closeTimer.current = setTimeout(() => setMenu(null), 280)
-  }
-
-  const closeMenuNow = () => {
-    clearCloseTimer()
-    setMenu(null)
+    closeTimer.current = setTimeout(() => setMenu(null), 220)
   }
 
   const toggleMenu = (key) => {
     clearCloseTimer()
+    setHoverLocked(false)
     setMenu((m) => (m === key ? null : key))
   }
 
@@ -155,6 +155,7 @@ export default function Navbar() {
     clearCloseTimer()
     setOpen(false)
     setMenu(null)
+    setHoverLocked(false)
     if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
       document.activeElement.blur()
     }
@@ -174,6 +175,7 @@ export default function Navbar() {
     clearCloseTimer()
     setMenu(null)
     setOpen(false)
+    setHoverLocked(false)
     if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
       document.activeElement.blur()
     }
@@ -183,19 +185,19 @@ export default function Navbar() {
 
   return (
     <>
-      <header
-        className={`nav ${open ? 'nav--open' : ''}`}
-        onMouseLeave={scheduleClose}
-        onMouseEnter={clearCloseTimer}
-      >
+      <header className={`nav ${open ? 'nav--open' : ''}`}>
         <div className="container nav-inner">
           <Logo header light />
 
           <nav className="nav-desktop" aria-label="Main">
-            <ul className="nav-links">
+            <ul
+              className="nav-links"
+              onMouseLeave={() => setHoverLocked(false)}
+            >
               <li
                 className={`has-mega ${menu === 'formations' ? 'is-open' : ''}`}
                 onMouseEnter={() => openMenu('formations')}
+                onMouseLeave={scheduleClose}
               >
                 <button
                   type="button"
@@ -208,19 +210,23 @@ export default function Navbar() {
                     ▾
                   </span>
                 </button>
-                <MegaMenu
-                  open={menu === 'formations'}
-                  items={nav.companyFormations}
-                  slugRoutePrefix="formation"
-                  image="/london-skyline.jpg"
-                  imageAlt="London skyline"
-                  onNavigate={closeAll}
-                />
+                {menu === 'formations' ? (
+                  <MegaMenu
+                    items={nav.companyFormations}
+                    slugRoutePrefix="formation"
+                    image="/london-skyline.jpg"
+                    imageAlt="London skyline"
+                    onNavigate={closeAll}
+                    onStayOpen={() => openMenu('formations')}
+                    onLeave={scheduleClose}
+                  />
+                ) : null}
               </li>
 
               <li
                 className={`has-mega ${menu === 'additional' ? 'is-open' : ''}`}
                 onMouseEnter={() => openMenu('additional')}
+                onMouseLeave={scheduleClose}
               >
                 <button
                   type="button"
@@ -233,19 +239,23 @@ export default function Navbar() {
                     ▾
                   </span>
                 </button>
-                <MegaMenu
-                  open={menu === 'additional'}
-                  items={nav.additionalServices}
-                  slugRoutePrefix="additional"
-                  image="/section-team.jpg"
-                  imageAlt="Additional company services"
-                  onNavigate={closeAll}
-                />
+                {menu === 'additional' ? (
+                  <MegaMenu
+                    items={nav.additionalServices}
+                    slugRoutePrefix="additional"
+                    image="/section-team.jpg"
+                    imageAlt="Additional company services"
+                    onNavigate={closeAll}
+                    onStayOpen={() => openMenu('additional')}
+                    onLeave={scheduleClose}
+                  />
+                ) : null}
               </li>
 
               <li
                 className={`has-mega ${menu === 'information' ? 'is-open' : ''}`}
                 onMouseEnter={() => openMenu('information')}
+                onMouseLeave={scheduleClose}
               >
                 <button
                   type="button"
@@ -258,28 +268,31 @@ export default function Navbar() {
                     ▾
                   </span>
                 </button>
-                <MegaMenu
-                  open={menu === 'information'}
-                  items={informationGuides}
-                  slugRoutePrefix="info"
-                  image="/london-skyline.jpg"
-                  imageAlt="London skyline business district"
-                  linkPrefix="#info"
-                  onNavigate={closeAll}
-                />
+                {menu === 'information' ? (
+                  <MegaMenu
+                    items={informationGuides}
+                    slugRoutePrefix="info"
+                    image="/london-skyline.jpg"
+                    imageAlt="London skyline business district"
+                    linkPrefix="#info"
+                    onNavigate={closeAll}
+                    onStayOpen={() => openMenu('information')}
+                    onLeave={scheduleClose}
+                  />
+                ) : null}
               </li>
 
-              <li onMouseEnter={closeMenuNow}>
+              <li>
                 <Link to="/companies-for-sale" onClick={closeAll}>
                   Companies for sale
                 </Link>
               </li>
-              <li onMouseEnter={closeMenuNow}>
+              <li>
                 <Link to="/vat" onClick={closeAll}>
                   VAT
                 </Link>
               </li>
-              <li onMouseEnter={closeMenuNow}>
+              <li>
                 <Link to={isAuthenticated ? '/portal' : '/login'} onClick={closeAll}>
                   {isAuthenticated ? 'Portal' : 'Account'}
                 </Link>
@@ -287,7 +300,7 @@ export default function Navbar() {
             </ul>
           </nav>
 
-          <div className="nav-cta" onMouseEnter={closeMenuNow}>
+          <div className="nav-cta">
             <div className="nav-phones">
               <a href="tel:03334442222" className="nav-phone" title="Local number">
                 <PhoneIcon />
