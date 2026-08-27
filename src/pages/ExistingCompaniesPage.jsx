@@ -23,7 +23,7 @@ export default function ExistingCompaniesPage() {
   const [year, setYear] = useState('all')
   const [page, setPage] = useState(1)
   const [openSlug, setOpenSlug] = useState(null)
-  const [sortAsc, setSortAsc] = useState(true)
+  const [sortDir, setSortDir] = useState(null) // null = original list order
   const [enquiryCompany, setEnquiryCompany] = useState(null)
 
   const closeEnquiry = useCallback(() => setEnquiryCompany(null), [])
@@ -36,13 +36,20 @@ export default function ExistingCompaniesPage() {
       .catch(() => setRemote(null))
   }, [])
 
-  const source = useMemo(
-    () =>
-      remote?.length > 0
-        ? remote
-        : existingCompanies.map((c) => ({ ...c, status: 'available' })),
-    [remote]
-  )
+  // Always keep the local catalog names/details; only merge live status/price from API
+  const source = useMemo(() => {
+    const local = existingCompanies.map((c) => ({ ...c, status: 'available' }))
+    if (!remote?.length) return local
+    return local.map((c) => {
+      const live = remote.find((r) => r.slug === c.slug)
+      if (!live) return c
+      return {
+        ...c,
+        status: live.status || c.status,
+        price: live.price ?? c.price,
+      }
+    })
+  }, [remote])
 
   const years = useMemo(() => {
     const set = new Set(source.map((c) => yearFromDate(c.incorporatedOn)).filter(Boolean))
@@ -56,15 +63,17 @@ export default function ExistingCompaniesPage() {
       const matchQuery =
         !q ||
         c.name.toLowerCase().includes(q) ||
-        String(c.companyNumber).includes(q)
+        String(c.companyNumber).includes(q) ||
+        (c.note && c.note.toLowerCase().includes(q))
       return matchYear && matchQuery
     })
     list = [...list].sort((a, b) => {
+      if (!sortDir) return (a.listNo || 0) - (b.listNo || 0)
       const cmp = a.name.localeCompare(b.name)
-      return sortAsc ? cmp : -cmp
+      return sortDir === 'asc' ? cmp : -cmp
     })
     return list
-  }, [source, query, year, sortAsc])
+  }, [source, query, year, sortDir])
 
   const total = filtered.length
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
@@ -138,9 +147,14 @@ export default function ExistingCompaniesPage() {
               <button
                 type="button"
                 className="sale-sort"
-                onClick={() => setSortAsc((v) => !v)}
+                onClick={() =>
+                  setSortDir((prev) => (prev === 'asc' ? 'desc' : prev === 'desc' ? null : 'asc'))
+                }
               >
-                Company name <span aria-hidden="true">{sortAsc ? '▾' : '▴'}</span>
+                Company name{' '}
+                <span aria-hidden="true">
+                  {sortDir === 'asc' ? '▴' : sortDir === 'desc' ? '▾' : '▾'}
+                </span>
               </button>
               <span>Registration number</span>
               <span>Incorporation date</span>

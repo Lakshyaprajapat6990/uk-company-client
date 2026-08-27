@@ -5041,12 +5041,16 @@ img {
   border-bottom: 0;
 }
 
+.sale-row:hover {
+  background: #f3f0fa;
+}
+
 .sale-row.is-featured {
-  background: #faf8ff;
+  background: #f3f0fa;
 }
 
 .sale-row.is-open {
-  background: #fcfbff;
+  background: #f3f0fa;
 }
 
 .sale-row-main {

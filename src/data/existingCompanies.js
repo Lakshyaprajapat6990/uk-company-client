@@ -11,7 +11,7 @@ export const existingCompanies = [
   },
   {
     slug: 'domain-trust-ltd',
-    name: 'Domain Trust ltd (Not for Profit)',
+    name: 'DOMAIN TRUST LTD',
     listNo: 2,
     incorporatedOn: '05/08/2016',
     companyNumber: '10314234',
