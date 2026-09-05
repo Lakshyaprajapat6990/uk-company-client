@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { informationGuides, nav } from '../data/content.js'
+import { keyProducts, productHubExtras } from '../data/keyProducts.js'
 import { useAuth } from '../lib/auth.jsx'
 import { useCart } from '../lib/cart.jsx'
 
@@ -118,14 +119,84 @@ function MegaMenu({
   )
 }
 
+function KeyProductsMega({ onNavigate, onStayOpen, onLeave }) {
+  return (
+    <div
+      className="mega-panel mega-panel--key-products"
+      role="region"
+      onMouseEnter={onStayOpen}
+      onMouseLeave={onLeave}
+    >
+      <div className="container key-products-inner">
+        <div className="key-products-intro">
+          <p className="key-products-kicker">What we do</p>
+          <h3>Key Products</h3>
+          <p>Our core UK company services - formations, buy and sell, ID checks, mail, and VAT.</p>
+        </div>
+        <ul className="key-products-grid">
+          {keyProducts.map((item) => (
+            <li key={item.id}>
+              {item.external ? (
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="key-product-card"
+                  onClick={onNavigate}
+                >
+                  <span className="key-product-title">
+                    <Chevron />
+                    {item.title}
+                  </span>
+                  <span className="key-product-blurb">{item.blurb}</span>
+                </a>
+              ) : (
+                <Link to={item.to} className="key-product-card" onClick={onNavigate}>
+                  <span className="key-product-title">
+                    <Chevron />
+                    {item.title}
+                  </span>
+                  <span className="key-product-blurb">{item.blurb}</span>
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+        <div className="key-products-extras">
+          <p className="key-products-extras-label">Also</p>
+          <ul className="key-products-extras-list">
+            {productHubExtras.map((item) => (
+              <li key={item.id}>
+                <Link to={item.to} onClick={onNavigate}>
+                  {item.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [menu, setMenu] = useState(null)
   const [hoverLocked, setHoverLocked] = useState(false)
   const closeTimer = useRef(null)
   const location = useLocation()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const { count } = useCart()
+  const accountTo = !isAuthenticated
+    ? '/login'
+    : user?.role === 'admin'
+      ? '/admin'
+      : '/portal'
+  const accountLabel = !isAuthenticated
+    ? 'Account'
+    : user?.role === 'admin'
+      ? 'Admin'
+      : 'Portal'
 
   const clearCloseTimer = () => {
     if (closeTimer.current) {
@@ -224,29 +295,25 @@ export default function Navbar() {
               </li>
 
               <li
-                className={`has-mega ${menu === 'additional' ? 'is-open' : ''}`}
-                onMouseEnter={() => openMenu('additional')}
+                className={`has-mega ${menu === 'key-products' ? 'is-open' : ''}`}
+                onMouseEnter={() => openMenu('key-products')}
                 onMouseLeave={scheduleClose}
               >
                 <button
                   type="button"
-                  className={menu === 'additional' ? 'is-open' : ''}
-                  aria-expanded={menu === 'additional'}
-                  onClick={() => toggleMenu('additional')}
+                  className={menu === 'key-products' ? 'is-open' : ''}
+                  aria-expanded={menu === 'key-products'}
+                  onClick={() => toggleMenu('key-products')}
                 >
-                  Additional Services
+                  Key Products
                   <span className="nav-chev" aria-hidden="true">
                     ▾
                   </span>
                 </button>
-                {menu === 'additional' ? (
-                  <MegaMenu
-                    items={nav.additionalServices}
-                    slugRoutePrefix="additional"
-                    image="/section-team.jpg"
-                    imageAlt="Additional company services"
+                {menu === 'key-products' ? (
+                  <KeyProductsMega
                     onNavigate={closeAll}
-                    onStayOpen={() => openMenu('additional')}
+                    onStayOpen={() => openMenu('key-products')}
                     onLeave={scheduleClose}
                   />
                 ) : null}
@@ -283,18 +350,8 @@ export default function Navbar() {
               </li>
 
               <li>
-                <Link to="/companies-for-sale" onClick={closeAll}>
-                  Companies for sale
-                </Link>
-              </li>
-              <li>
-                <Link to="/vat" onClick={closeAll}>
-                  VAT
-                </Link>
-              </li>
-              <li>
-                <Link to={isAuthenticated ? '/portal' : '/login'} onClick={closeAll}>
-                  {isAuthenticated ? 'Portal' : 'Account'}
+                <Link to={accountTo} onClick={closeAll}>
+                  {accountLabel}
                 </Link>
               </li>
             </ul>
@@ -319,12 +376,18 @@ export default function Navbar() {
                 {count > 0 ? <em className="nav-cart-count">{count}</em> : null}
               </Link>
               <Link
-                to={isAuthenticated ? '/portal' : '/login'}
+                to={accountTo}
                 className="nav-cart-btn nav-cta-btn"
                 onClick={closeAll}
               >
                 <UserIcon />
-                <span>{isAuthenticated ? 'My portal' : 'Account login'}</span>
+                <span>
+                  {!isAuthenticated
+                    ? 'Account login'
+                    : user?.role === 'admin'
+                      ? 'Admin CMS'
+                      : 'My portal'}
+                </span>
               </Link>
             </div>
             <button
@@ -361,19 +424,25 @@ export default function Navbar() {
                 ))}
               </ul>
             </li>
-            <li className={`has-drop ${menu === 'additional' ? 'active' : ''}`}>
-              <button type="button" onClick={() => toggleMenu('additional')}>
-                Additional Services
+            <li className={`has-drop ${menu === 'key-products' ? 'active' : ''}`}>
+              <button type="button" onClick={() => toggleMenu('key-products')}>
+                Key Products
                 <span className="nav-chev" aria-hidden="true">
                   ▾
                 </span>
               </button>
               <ul className="dropdown">
-                {nav.additionalServices.map((item) => (
-                  <li key={item.slug}>
-                    <Link to={`/additional/${item.slug}`} onClick={closeAll}>
-                      {item.title}
-                    </Link>
+                {keyProducts.map((item) => (
+                  <li key={item.id}>
+                    {item.external ? (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" onClick={closeAll}>
+                        {item.title}
+                      </a>
+                    ) : (
+                      <Link to={item.to} onClick={closeAll}>
+                        {item.title}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -396,23 +465,17 @@ export default function Navbar() {
               </ul>
             </li>
             <li>
-              <Link to="/companies-for-sale" onClick={closeAll}>
-                Companies for sale
-              </Link>
-            </li>
-            <li>
-              <Link to="/vat" onClick={closeAll}>
-                VAT
-              </Link>
-            </li>
-            <li>
               <Link to="/cart" onClick={closeAll}>
                 Add to cart{count > 0 ? ` (${count})` : ''}
               </Link>
             </li>
             <li>
-              <Link to={isAuthenticated ? '/portal' : '/login'} onClick={closeAll}>
-                {isAuthenticated ? 'My portal' : 'Account login'}
+              <Link to={accountTo} onClick={closeAll}>
+                {!isAuthenticated
+                  ? 'Account login'
+                  : user?.role === 'admin'
+                    ? 'Admin CMS'
+                    : 'My portal'}
               </Link>
             </li>
           </ul>
@@ -427,11 +490,16 @@ export default function Navbar() {
               <span>Int: +44 333-444-2222</span>
             </a>
             <Link
-              to={isAuthenticated ? '/portal' : '/login'}
+              to={accountTo}
               className="btn btn-dark btn-block"
               onClick={closeAll}
             >
-              {isAuthenticated ? 'My portal' : 'Account login'} <Arrow />
+              {!isAuthenticated
+                ? 'Account login'
+                : user?.role === 'admin'
+                  ? 'Admin CMS'
+                  : 'My portal'}{' '}
+              <Arrow />
             </Link>
           </div>
         </div>

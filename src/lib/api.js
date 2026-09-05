@@ -61,6 +61,25 @@ export const shelfApi = {
   reserve: (slug, body = {}) => api(`/companies-for-sale/${slug}/reserve`, { method: 'POST', body }),
 }
 
+export const adminApi = {
+  stats: () => api('/admin/stats'),
+  orders: (params = {}) => {
+    const q = new URLSearchParams()
+    if (params.status) q.set('status', params.status)
+    if (params.paymentStatus) q.set('paymentStatus', params.paymentStatus)
+    if (params.limit) q.set('limit', String(params.limit))
+    const qs = q.toString()
+    return api(`/admin/orders${qs ? `?${qs}` : ''}`)
+  },
+  updateOrderStatus: (id, body) => api(`/admin/orders/${id}/status`, { method: 'PATCH', body }),
+  users: () => api('/admin/users'),
+  deleteUser: (id) => api(`/admin/users/${id}`, { method: 'DELETE' }),
+  companies: () => api('/admin/companies'),
+  createCompany: (body) => api('/admin/companies', { method: 'POST', body }),
+  updateCompany: (id, body) => api(`/admin/companies/${id}`, { method: 'PATCH', body }),
+  deleteCompany: (id) => api(`/admin/companies/${id}`, { method: 'DELETE' }),
+}
+
 export const PENDING_ORDER_KEY = 'uk_pending_order'
 export const PENDING_SHELF_KEY = 'uk_pending_shelf'
 

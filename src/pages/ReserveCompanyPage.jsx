@@ -13,6 +13,7 @@ export default function ReserveCompanyPage() {
   const { isAuthenticated } = useAuth()
   const { addItem } = useCart()
   const [company, setCompany] = useState(listed || null)
+  const [loading, setLoading] = useState(!listed)
   const [wantsVerificationService, setWantsVerificationService] = useState(false)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -20,15 +21,26 @@ export default function ReserveCompanyPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    setLoading(true)
     shelfApi
       .get(slug)
       .then((data) => setCompany(data.company))
       .catch(() => {
         if (listed) setCompany({ ...listed, status: 'available' })
+        else setCompany(null)
       })
-  }, [slug])
+      .finally(() => setLoading(false))
+  }, [slug, listed])
 
-  if (!listed && !company) return <Navigate to="/companies-for-sale" replace />
+  if (loading) {
+    return (
+      <section className="shelf-page">
+        <div className="container">Loading company...</div>
+      </section>
+    )
+  }
+
+  if (!company && !listed) return <Navigate to="/companies-for-sale" replace />
 
   const display = company || listed
   const available = (display.status || 'available') === 'available'
@@ -61,6 +73,10 @@ export default function ReserveCompanyPage() {
       type: 'shelf',
       slug: display.slug,
       title: display.name,
+      companyNumber: display.companyNumber,
+      incorporatedOn: display.incorporatedOn,
+      basePrice: display.price,
+      verificationFee: wantsVerificationService ? CH_VERIFICATION_FEE : 0,
       price: total,
       href: `/companies-for-sale/${display.slug}`,
     })
@@ -121,7 +137,7 @@ export default function ReserveCompanyPage() {
               ID and the verification code, as we are UK Government / HMRC and Companies House
               regulated. We have to follow the rules and AMLR compliance. If you have difficulty
               getting the code, I am authorised to issue the codes once I have checked and verified
-              the ID and done the checks at my end — but we have to charge £75 for this, as there is
+              the ID and done the checks at my end - but we have to charge £75 for this, as there is
               vetting licence costs.
             </p>
             <p>
@@ -186,7 +202,9 @@ export default function ReserveCompanyPage() {
               </>
             )}
             <p className="shelf-fineprint">
-              Reservation collects your details. A proforma invoice follows after ID checks.
+              Reservation collects your details. A proforma invoice follows after ID checks.{' '}
+              <Link to="/id-verification">ID Verification</Link> · <Link to="/buy">Buy hub</Link> ·{' '}
+              <Link to="/cart">View cart</Link>
             </p>
           </aside>
         </div>

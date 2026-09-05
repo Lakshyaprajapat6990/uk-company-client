@@ -1,41 +1,16 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth.jsx'
-import { ordersApi, PENDING_ORDER_KEY, PENDING_SHELF_KEY, shelfApi } from '../lib/api.js'
-
-async function resumePendingOrder(navigate, fallback) {
-  const shelfRaw = sessionStorage.getItem(PENDING_SHELF_KEY)
-  if (shelfRaw) {
-    sessionStorage.removeItem(PENDING_SHELF_KEY)
-    try {
-      const payload = JSON.parse(shelfRaw)
-      const data = await shelfApi.reserve(payload.slug, {
-        wantsVerificationService: Boolean(payload.wantsVerificationService),
-      })
-      navigate(`/portal/orders/${data.order._id}`)
-      return
-    } catch {
-      navigate('/companies-for-sale')
-      return
-    }
-  }
-
-  const raw = sessionStorage.getItem(PENDING_ORDER_KEY)
-  if (!raw) {
-    navigate(fallback)
-    return
-  }
-  sessionStorage.removeItem(PENDING_ORDER_KEY)
-  try {
-    const payload = JSON.parse(raw)
-    const data = await ordersApi.create(payload)
-    navigate(`/portal/orders/${data.order._id}`)
-  } catch {
-    navigate('/portal')
-  }
-}
+import { afterAuthNavigate } from '../lib/authFlow.js'
+import usePageMeta from '../hooks/usePageMeta.js'
 
 export default function Login() {
+  usePageMeta(
+    'Account login | UK.company',
+    'Sign in to your UK.company account to manage orders, formation details and ID documents.',
+    '/login'
+  )
+
   const { login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -49,8 +24,9 @@ export default function Login() {
     setError('')
     setBusy(true)
     try {
-      await login(email, password)
-      await resumePendingOrder(navigate, location.state?.from || '/portal')
+      const user = await login(email, password)
+      const fallback = location.state?.from || (user?.role === 'admin' ? '/admin' : '/portal')
+      await afterAuthNavigate(user, navigate, fallback)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -62,12 +38,21 @@ export default function Login() {
     <section className="auth-page">
       <div className="container auth-card">
         <h1>Account login</h1>
-        <p className="auth-lead">Sign in to manage orders, formation details and documents.</p>
+        <p className="auth-lead">
+          Sign in to manage UK.company orders. Admins are taken to the CMS. Customers use the portal
+          for formations and ready-made company reservations.
+        </p>
         <form onSubmit={onSubmit} className="auth-form">
           {error ? <p className="auth-error">{error}</p> : null}
           <label>
             Email
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
           </label>
           <label>
             Password
@@ -77,6 +62,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
+              autoComplete="current-password"
             />
           </label>
           <button className="btn btn-primary btn-block" disabled={busy}>

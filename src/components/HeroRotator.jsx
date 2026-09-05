@@ -12,7 +12,7 @@ const slides = [
   {
     kicker: 'Companies for sale',
     title: 'Ready-made UK companies from £595',
-    text: 'Reserve an existing company. ID checks first — proforma invoice after approval.',
+    text: 'Reserve an existing company. ID checks first - proforma invoice after approval.',
     cta: 'View companies',
     to: '/companies-for-sale',
   },

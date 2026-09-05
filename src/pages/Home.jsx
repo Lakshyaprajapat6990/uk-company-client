@@ -4,9 +4,10 @@ import Reveal from '../components/Reveal.jsx'
 import HeroRotator from '../components/HeroRotator.jsx'
 import HeroBackground from '../components/HeroBackground.jsx'
 import { getFormationSlugByTitle } from '../data/formationPages.js'
+import { keyProducts } from '../data/keyProducts.js'
+import { blogPosts } from '../data/blogPosts.js'
 import {
   agentBenefits,
-  blogs,
   faqs,
   included,
   informationGuides,
@@ -66,7 +67,7 @@ const newsImages = ['/news-1.jpg', '/news-2.jpg', '/news-3.jpg']
 const specialOffers = [
   {
     title: 'Formation from £107',
-    text: 'Limited company ready to trade — Companies House fee included.',
+    text: 'Limited company ready to trade - Companies House fee included.',
     badge: 'Popular',
     to: '/formation/ltd-or-private-limited-company-formation-in-uk',
   },
@@ -101,7 +102,7 @@ const featuredPlans = [
   },
   {
     name: 'Non-UK Residents LTD',
-    desc: 'Form a UK company with our central London address — no UK nationals required.',
+    desc: 'Form a UK company with our central London address - no UK nationals required.',
     price: '£163',
     features: ['Central London address included', 'One person can form', 'Ready to trade', 'Lifetime support'],
     featured: false,
@@ -119,6 +120,36 @@ export default function Home() {
       {/* HERO */}
       <section className="hero" aria-label="Welcome">
         <HeroBackground />
+
+        {/* KEY POINTS SINGLE ROW */}
+        <div className="hero-key-points-wrap animate-in">
+          <div className="container">
+            <nav className="hero-key-points-row" aria-label="Key products">
+              {keyProducts.map((item) =>
+                item.external ? (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hero-key-point-block"
+                  >
+                    <span>{item.title}</span>
+                  </a>
+                ) : (
+                  <Link
+                    key={item.id}
+                    to={item.to}
+                    className="hero-key-point-block"
+                  >
+                    <span>{item.title}</span>
+                  </Link>
+                )
+              )}
+            </nav>
+          </div>
+        </div>
+
         <div className="container hero-grid">
           <div className="hero-copy animate-in">
             <p className="brand-kicker">
@@ -151,7 +182,7 @@ export default function Home() {
             <p className="section-label center">Special offers</p>
             <h2 className="center-title">Discount packs and rotating deals</h2>
             <p className="prices-lead">
-              Clear calls to action — form a new company, reserve a shelf company, or add VAT in one click.
+              Clear calls to action - form a new company, reserve a shelf company, or add VAT in one click.
             </p>
           </Reveal>
           <div className="offers-grid">
@@ -178,7 +209,7 @@ export default function Home() {
             <p className="section-label anim-blink-soft">You are welcome</p>
             <h2>Company formation in the UK has never been easier</h2>
             <p className="welcome-lead">
-              Pick &amp; mix the services you need — no inflated bundles. Transparent pricing, approved Companies House
+              Pick &amp; mix the services you need - no inflated bundles. Transparent pricing, approved Companies House
               agents, and free lifetime support via your company administration portal.
             </p>
           </Reveal>
@@ -241,7 +272,7 @@ export default function Home() {
             <h2>Why use a company formation agent?</h2>
             <p>
               Company formation agents provide an additional level of support with services Companies House cannot
-              offer — the extras new businesses need to get started quickly and securely.
+              offer - the extras new businesses need to get started quickly and securely.
             </p>
             <ul className="check-list">
               {agentBenefits.map((item) => (
@@ -266,7 +297,7 @@ export default function Home() {
             <h2>To start your company formation, select one of the following</h2>
             <p className="services-lead">
               Limited companies, LLPs, LBG &amp; charity structures, CICs, non-UK resident packs, address services and
-              company restoration — all with clear pricing.
+              company restoration - all with clear pricing.
             </p>
           </Reveal>
 
@@ -297,7 +328,7 @@ export default function Home() {
                       Read more <Arrow />
                     </Link>
                   ) : (
-                    <a href="#contact" className="btn btn-primary">
+                    <a href="/contact" className="btn btn-primary">
                       Read more <Arrow />
                     </a>
                   )}
@@ -310,7 +341,7 @@ export default function Home() {
             <a href="#prices" className="btn btn-outline">
               View featured packages <Arrow />
             </a>
-            <a href="#contact" className="btn btn-primary">
+            <a href="/contact" className="btn btn-primary">
               Get in touch <Arrow />
             </a>
           </Reveal>
@@ -353,13 +384,13 @@ export default function Home() {
       <section className="contact-strip">
         <div className="container contact-strip-inner">
           <Reveal variant="popup">
-            <h2>Are you Non-UK Resident? Don&apos;t worry — you can still form a company in the UK</h2>
+            <h2>Are you Non-UK Resident? Don&apos;t worry - you can still form a company in the UK</h2>
           </Reveal>
           <Reveal className="hero-actions" delay={160} variant="bottom">
             <a href="#services" className="btn btn-outline btn-lg" onClick={() => setTab('nonuk')}>
               Non-residents packages <Arrow />
             </a>
-            <a href="#contact" className="btn btn-primary btn-lg anim-blink-soft">
+            <a href="/contact" className="btn btn-primary btn-lg anim-blink-soft">
               Get in touch <Arrow />
             </a>
           </Reveal>
@@ -428,7 +459,7 @@ export default function Home() {
             <p className="section-label center">Packages</p>
             <h2 className="center-title">Formation packages window</h2>
             <p className="prices-lead">
-              No hidden charges. Pick the pack that fits your business — Limited Company, privacy address, or non-UK
+              No hidden charges. Pick the pack that fits your business - Limited Company, privacy address, or non-UK
               resident formation.
             </p>
           </Reveal>
@@ -549,25 +580,25 @@ export default function Home() {
             </p>
           </Reveal>
           <div className="news-grid">
-            {blogs.map((n, i) => (
-              <Reveal key={n.title} delay={i * 140} variant={newsVariants[i] || 'bottom'}>
+            {blogPosts.map((n, i) => (
+              <Reveal key={n.slug} delay={i * 140} variant={newsVariants[i] || 'bottom'}>
                 <article className="news-card">
-                  <a href="#blogs" className="news-card-media">
-                    <img src={newsImages[i] || '/news-1.jpg'} alt="" />
+                  <Link to={`/blog/${n.slug}`} className="news-card-media">
+                    <img src={n.image || newsImages[i] || '/news-1.jpg'} alt="" />
                     <span className="news-tag">Blog</span>
-                  </a>
+                  </Link>
                   <div className="news-card-body">
                     <h3>
-                      <a href="#blogs">{n.title}</a>
+                      <Link to={`/blog/${n.slug}`}>{n.title}</Link>
                     </h3>
                     <p>{n.excerpt}</p>
                     <div className="news-card-footer">
                       <div className="news-meta">
                         <span>UK.company</span>
                       </div>
-                      <a href="#blogs" className="news-read">
+                      <Link to={`/blog/${n.slug}`} className="news-read">
                         Read more <Arrow />
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </article>
@@ -575,9 +606,12 @@ export default function Home() {
             ))}
           </div>
           <Reveal className="news-cta" delay={320} variant="blink">
-            <a href="#contact" className="btn btn-primary">
+            <Link to="/blog" className="btn btn-outline" style={{ marginRight: 12 }}>
+              View all blogs
+            </Link>
+            <Link to="/contact" className="btn btn-primary">
               Are you ready to register your company? <Arrow />
-            </a>
+            </Link>
           </Reveal>
         </div>
       </section>
@@ -586,7 +620,7 @@ export default function Home() {
       <section className="services-section" id="extra-includes">
         <div className="container">
           <div className="include-block">
-            <h3>Registered office — what&apos;s included</h3>
+            <h3>Registered office - what&apos;s included</h3>
             <div className="include-grid">
               {included.address.map((item) => (
                 <article key={item.title} className="include-item">
@@ -597,7 +631,7 @@ export default function Home() {
             </div>
           </div>
           <div className="include-block">
-            <h3>Company restoration — what&apos;s included</h3>
+            <h3>Company restoration - what&apos;s included</h3>
             <div className="include-grid">
               {included.restoration.map((item) => (
                 <article key={item.title} className="include-item">

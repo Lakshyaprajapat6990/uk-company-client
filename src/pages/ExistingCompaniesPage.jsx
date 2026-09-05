@@ -5,6 +5,7 @@ import PillFaq from '../components/PillFaq.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { existingCompanies, formatGbp, shelfFaqs } from '../data/existingCompanies.js'
 import { shelfApi } from '../lib/api.js'
+import usePageMeta from '../hooks/usePageMeta.js'
 
 const PAGE_SIZE = 10
 
@@ -18,6 +19,12 @@ function formatDisplayDate(dateStr = '') {
 }
 
 export default function ExistingCompaniesPage() {
+  usePageMeta(
+    'UK Companies for Sale | Buy Ready-Made Companies | UK.company',
+    'Browse ready-made UK limited companies for sale. Reserve first, complete ID verification, then transfer after proforma payment. Companies House and HMRC regulated (ACSP).',
+    '/companies-for-sale'
+  )
+
   const [remote, setRemote] = useState(null)
   const [query, setQuery] = useState('')
   const [year, setYear] = useState('all')
@@ -36,19 +43,22 @@ export default function ExistingCompaniesPage() {
       .catch(() => setRemote(null))
   }, [])
 
-  // Always keep the local catalog names/details; only merge live status/price from API
+  // Prefer live Mongo catalogue from API (admin CMS). Fall back to local seed list offline.
   const source = useMemo(() => {
-    const local = existingCompanies.map((c) => ({ ...c, status: 'available' }))
-    if (!remote?.length) return local
-    return local.map((c) => {
-      const live = remote.find((r) => r.slug === c.slug)
-      if (!live) return c
-      return {
-        ...c,
-        status: live.status || c.status,
-        price: live.price ?? c.price,
-      }
-    })
+    if (remote?.length) {
+      return remote.map((c) => ({
+        slug: c.slug,
+        name: c.name,
+        listNo: c.listNo,
+        incorporatedOn: c.incorporatedOn,
+        companyNumber: c.companyNumber,
+        price: c.price,
+        featured: Boolean(c.featured),
+        note: c.note || '',
+        status: c.status || 'available',
+      }))
+    }
+    return existingCompanies.map((c) => ({ ...c, status: 'available' }))
   }, [remote])
 
   const years = useMemo(() => {
@@ -98,6 +108,8 @@ export default function ExistingCompaniesPage() {
             <nav className="formation-breadcrumb" aria-label="Breadcrumb">
               <Link to="/">Home</Link>
               <span aria-hidden="true">/</span>
+              <Link to="/buy">Buy a company</Link>
+              <span aria-hidden="true">/</span>
               <span>Companies for sale</span>
             </nav>
             <p className="section-label">Existing UK companies</p>
@@ -106,7 +118,41 @@ export default function ExistingCompaniesPage() {
               Ready-made UK companies. Identity checks are required before transfer. We are Companies
               House and HMRC regulated (ACSP).
             </p>
+            <div className="hero-actions" style={{ marginTop: 20 }}>
+              <Link to="/buy" className="btn btn-outline-light btn-lg">
+                Buy / sell hub
+              </Link>
+              <Link to="/sell" className="btn btn-outline-light btn-lg">
+                Sell your company to us
+              </Link>
+              <Link to="/id-verification" className="btn btn-outline-light btn-lg">
+                ID Verification
+              </Link>
+            </div>
           </Reveal>
+        </div>
+      </section>
+
+      <section className="sale-process-strip">
+        <div className="container">
+          <ol className="sale-process-steps">
+            <li>
+              <strong>1. Reserve</strong>
+              <span>Choose a company and reserve it</span>
+            </li>
+            <li>
+              <strong>2. ID checks</strong>
+              <span>Photo ID + proof of address for directors / PSCs</span>
+            </li>
+            <li>
+              <strong>3. Proforma</strong>
+              <span>Invoice &amp; bank details after approval</span>
+            </li>
+            <li>
+              <strong>4. Transfer</strong>
+              <span>Officers updated after payment received</span>
+            </li>
+          </ol>
         </div>
       </section>
 

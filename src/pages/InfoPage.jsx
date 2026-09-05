@@ -50,7 +50,7 @@ export default function InfoPage() {
                 us and we&apos;ll guide you through the next steps.
               </p>
               <div className="hero-actions">
-                <a href="#contact" className="btn btn-primary btn-lg">
+                <a href="/contact" className="btn btn-primary btn-lg">
                   Get in touch <Arrow />
                 </a>
                 <Link to="/#services" className="btn btn-outline btn-lg">

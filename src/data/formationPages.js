@@ -59,7 +59,7 @@ export const whatsIncludedDefault = [
 
 export const optionalFreeServices = [
   'UK residents can be referred to a selection of High Street and online banks. Non-UK residents can be referred to a selection of online banks.',
-  '1 hour consultation with accountants — either face-to-face or by Skype.',
+  '1 hour consultation with accountants - either face-to-face or by Skype.',
   'Optional referral to a payroll bureau.',
   'Optional referral to bookkeeping and accounting bureau.',
   'Introduction to online accounting software with introductory benefits.',
@@ -126,7 +126,7 @@ const ltdAboutSections = [
         text: 'All newly formed companies are dormant until they start trading. Dormant companies are still obliged to file confirmation statements and dormant company accounts with Companies House.',
       },
       {
-        heading: 'Closing an unwanted limited company — Dissolution',
+        heading: 'Closing an unwanted limited company - Dissolution',
         text: 'The process of striking off or dissolving a limited company is straightforward, providing the company does not have any creditors and has not been active during the 90 days prior to the application.',
       },
       {
@@ -145,7 +145,7 @@ export const formationPages = [
     price: 107,
     priceDisplay: '£107',
     description:
-      'Be ready to trade within one working day (sometimes in as little as three hours — if the people at Companies House are not busy) by using our quick and straightforward process. Take advantage of our partner referrals to get your business bank account, accounting software, and merchant accounts opened without delay.',
+      'Be ready to trade within one working day (sometimes in as little as three hours - if the people at Companies House are not busy) by using our quick and straightforward process. Take advantage of our partner referrals to get your business bank account, accounting software, and merchant accounts opened without delay.',
     bundledAddons: [],
     contentSections: ltdAboutSections,
   },
@@ -327,7 +327,7 @@ export const formationPages = [
       {
         title: 'Companies with more than 1 class of share',
         paragraphs: [
-          'Alphabet shares allow flexible profit distribution and voting arrangements between shareholders — ideal for family companies and joint ventures.',
+          'Alphabet shares allow flexible profit distribution and voting arrangements between shareholders - ideal for family companies and joint ventures.',
         ],
       },
     ],

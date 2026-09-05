@@ -87,7 +87,7 @@ export default function AdditionalServicePage() {
                   <span>Total order</span>
                   <strong>{page.priceDisplay}</strong>
                 </div>
-                <a href="#contact" className="btn btn-primary btn-block">
+                <a href="/contact" className="btn btn-primary btn-block">
                   Save &amp; Continue <Arrow />
                 </a>
               </div>
@@ -145,7 +145,7 @@ export default function AdditionalServicePage() {
               required information.
             </p>
             <div className="hero-actions">
-              <a href="#contact" className="btn btn-primary btn-lg">
+              <a href="/contact" className="btn btn-primary btn-lg">
                 Save &amp; Continue <Arrow />
               </a>
               <Link to="/#services" className="btn btn-outline btn-lg">

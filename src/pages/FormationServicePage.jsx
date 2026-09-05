@@ -120,6 +120,8 @@ export default function FormationServicePage() {
       type: 'formation',
       slug: page.slug,
       title: page.title,
+      subtitle: page.subtitle,
+      basePrice: page.price,
       price: total,
       href: `/formation/${page.slug}`,
     })
@@ -347,7 +349,7 @@ export default function FormationServicePage() {
         <div className="container formation-cta-inner">
           <Reveal variant="popup">
             <h2>Ready to form your company?</h2>
-            <p>Start your order today — transparent pricing, no hidden charges, and free lifetime support.</p>
+            <p>Start your order today - transparent pricing, no hidden charges, and free lifetime support.</p>
             <div className="hero-actions">
               <button type="button" className="btn btn-outline-light btn-lg" onClick={addToCart}>
                 Add to cart

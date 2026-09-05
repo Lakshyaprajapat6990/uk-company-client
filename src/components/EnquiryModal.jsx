@@ -94,7 +94,7 @@ export default function EnquiryModal({ open, companyName = '', onClose }) {
 
         {sent ? (
           <div className="enquiry-success">
-            <p>Thanks — your enquiry is ready to send via your email app.</p>
+            <p>Thanks - your enquiry is ready to send via your email app.</p>
             <button type="button" className="enquiry-submit" onClick={onClose}>
               Close
             </button>

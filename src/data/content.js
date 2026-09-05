@@ -5,7 +5,7 @@ export const informationGuides = [
   {
     id: 'why-use-agent',
     title: 'Why Use Any Company Formation Agent',
-    text: 'The simple reason for choosing a company formation agent is the additional support you receive. Agents provide services Companies House cannot offer — bank referrals, registered office and mail handling, company administration portals, accountant referrals and VAT registration.',
+    text: 'The simple reason for choosing a company formation agent is the additional support you receive. Agents provide services Companies House cannot offer - bank referrals, registered office and mail handling, company administration portals, accountant referrals and VAT registration.',
   },
   {
     id: 'choosing-name',
@@ -55,7 +55,7 @@ export const informationGuides = [
   {
     id: 'admin-portal',
     title: 'Free Company Admin Portal',
-    text: 'Every formation includes a free online administration portal linked to Companies House so you can update officers, file changes and manage your company records for the life of the company — with free lifetime support.',
+    text: 'Every formation includes a free online administration portal linked to Companies House so you can update officers, file changes and manage your company records for the life of the company - with free lifetime support.',
   },
 ]
 
@@ -63,7 +63,7 @@ export const nav = {
   topLinks: [
     { label: 'Account login', href: '/login' },
     { label: 'Customer portal', href: '/portal' },
-    { label: 'Contact us', href: '#contact' },
+    { label: 'Contact us', href: '/contact' },
   ],
   companyFormations: formationNavItems,
   additionalServices: additionalServiceNavItems,
@@ -408,31 +408,45 @@ export const faqs = [
 ]
 
 export const footer = {
-  tradingName: 'is a trading name of Smart Registrations Limited',
-  companyNr: 'Company Nr: 12123095.',
-  vat: 'VAT Registration Nr: 328383976',
-  ico: 'ICO Registration Reference: ZA872655',
+  // Legal entity numbers: add UK.company company / VAT / ICO when Nick confirms.
+  tradingName: 'UK.company',
+  companyNr: '',
+  vat: '',
+  ico: '',
   acsp: 'ACSP Nr: AP006944',
   address: '27 Old Gloucester Street, London, WC1N 3AX, UK',
   columns: [
     {
       title: 'About',
       links: [
-        { label: 'Home', href: '#' },
-        { label: 'What We Do', href: '#services' },
-        { label: 'Who We Are', href: '#about' },
-        { label: 'Blog', href: '#blogs' },
-        { label: 'Contacts', href: '#contact' },
+        { label: 'Home', href: '/' },
+        { label: 'What We Do', href: '/#services' },
+        { label: 'Who We Are', href: '/#about' },
+        { label: 'Blog', href: '/blog' },
+        { label: 'Contacts', href: '/contact' },
       ],
     },
     {
-      title: 'Our Services',
+      title: 'Key Products',
       links: [
-        { label: 'Company Formations', href: '#services' },
+        { label: 'UK Company Formations', href: '/formations' },
+        { label: 'Sell your Existing Company', href: '/sell' },
+        { label: 'Buy an Existing Company', href: '/buy' },
+        { label: 'ID Verification', href: '/id-verification' },
+        { label: 'MyUKPost.com', href: '/myukpost' },
+        { label: 'VAT applications', href: '/vat' },
+        { label: 'International / Non-UK', href: '/international' },
+        { label: 'Bounce Back Loans (BBL)', href: '/bbl' },
         { label: 'Companies for sale', href: '/companies-for-sale' },
-        { label: 'VAT', href: '/vat' },
-        { label: 'Additional Services', href: '#services' },
-        { label: 'Packages & Pricing', href: '#prices' },
+      ],
+    },
+    {
+      title: 'Legal',
+      links: [
+        { label: 'Privacy Policy', href: '/privacy' },
+        { label: 'Terms of Use', href: '/terms' },
+        { label: 'Cookies Policy', href: '/cookies' },
+        { label: 'Ecosystem map', href: '/ecosystem' },
       ],
     },
   ],

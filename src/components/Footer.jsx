@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import Logo from './Logo.jsx'
+import { Link } from 'react-router-dom'
 import { footer } from '../data/content.js'
 
 const IconFacebook = () => (
@@ -42,22 +44,50 @@ const social = [
 ]
 
 export default function Footer() {
+  const [email, setEmail] = useState('')
+  const [sent, setSent] = useState(false)
+
+  function handleNewsletter(e) {
+    e.preventDefault()
+    const value = email.trim()
+    if (!value) return
+    const subject = 'Newsletter signup'
+    const body = `Please add this email to the UK.company newsletter:\n\n${value}`
+    window.location.href = `mailto:info@uk.company?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    setSent(true)
+  }
+
   return (
     <footer className="footer calcue-footer" id="contact">
       <div className="container">
         <div className="footer-newsletter">
           <h2>Stay up to date with upcoming workshops and new products</h2>
-          <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-            <label htmlFor="newsletter-email">Email Address</label>
-            <input id="newsletter-email" type="email" name="email" placeholder="info@uk.company" required />
-            <p className="newsletter-note">
-              By signing and clicking Submit, you affirm you have read and agree to the Privacy Policy and Terms of Use
-              and want to receive news.
+          {sent ? (
+            <p className="newsletter-success">
+              Thanks - your email app should open so you can confirm the signup.
             </p>
-            <button type="submit" className="btn btn-primary newsletter-submit">
-              Submit
-            </button>
-          </form>
+          ) : (
+            <form className="newsletter-form" onSubmit={handleNewsletter}>
+              <label htmlFor="newsletter-email">Email Address</label>
+              <input
+                id="newsletter-email"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <p className="newsletter-note">
+                By clicking Submit, you agree to our{' '}
+                <Link to="/privacy">Privacy Policy</Link> and <Link to="/terms">Terms of Use</Link>{' '}
+                and want to receive news.
+              </p>
+              <button type="submit" className="btn btn-primary newsletter-submit">
+                Submit
+              </button>
+            </form>
+          )}
         </div>
 
         <div className="footer-cols footer-cols--wide">
@@ -67,7 +97,11 @@ export default function Footer() {
               <ul>
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <a href={l.href}>{l.label}</a>
+                    {l.href.startsWith('/') && !l.href.startsWith('/#') ? (
+                      <Link to={l.href}>{l.label}</Link>
+                    ) : (
+                      <a href={l.href}>{l.label}</a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -107,12 +141,27 @@ export default function Footer() {
               <strong>Email</strong>
               <span>info@uk.company</span>
             </a>
+            <Link to="/contact" className="footer-contact-link">
+              <strong>Contact page</strong>
+              <span>Form &amp; details</span>
+            </Link>
           </div>
         </div>
 
         <div className="footer-bottom footer-bottom--calcue">
           <Logo light />
-          <span>UK.company © {new Date().getFullYear()}. All Rights Reserved.</span>
+          <div className="footer-bottom-copy">
+            <span>
+              UK.company © {new Date().getFullYear()}. All Rights Reserved.{' '}
+              <Link to="/privacy">Privacy</Link> · <Link to="/terms">Terms</Link> ·{' '}
+              <Link to="/cookies">Cookies</Link>
+            </span>
+            <span className="footer-legal-line">
+              {footer.tradingName}
+              {footer.acsp ? ` · ${footer.acsp}` : ''}
+              {footer.address ? ` · ${footer.address}` : ''}
+            </span>
+          </div>
         </div>
       </div>
     </footer>

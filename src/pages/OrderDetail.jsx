@@ -200,7 +200,7 @@ export default function OrderDetail() {
                 <ul className="portal-item-list">
                   {order.items?.map((item) => (
                     <li key={`${item.slug}-${item.title}`}>
-                      {item.title} — £{Number(item.price).toFixed(2)}
+                      {item.title} - £{Number(item.price).toFixed(2)}
                     </li>
                   ))}
                 </ul>

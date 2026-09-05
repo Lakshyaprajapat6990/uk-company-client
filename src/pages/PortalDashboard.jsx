@@ -22,13 +22,26 @@ export default function PortalDashboard() {
       <div className="container">
         <div className="portal-header">
           <div>
-            <p className="section-label">Customer portal</p>
+            <p className="section-label">
+              {user?.role === 'admin' ? 'Admin · customer view' : 'Customer portal'}
+            </p>
             <h1>Welcome{user?.name ? `, ${user.name}` : ''}</h1>
-            <p className="portal-lead">Track orders, complete formation details and upload ID documents.</p>
+            <p className="portal-lead">
+              Track UK.company orders, complete formation or transfer details, and upload ID
+              documents. This portal is not your MyUKPost mail account - address products checkout on{' '}
+              <Link to="/myukpost">MyUKPost.com</Link>.
+            </p>
           </div>
-          <button type="button" className="btn btn-outline" onClick={logout}>
-            Log out
-          </button>
+          <div className="hero-actions">
+            {user?.role === 'admin' ? (
+              <Link to="/admin" className="btn btn-primary">
+                Open admin CMS
+              </Link>
+            ) : null}
+            <button type="button" className="btn btn-outline" onClick={logout}>
+              Log out
+            </button>
+          </div>
         </div>
 
         {error ? <p className="auth-error">{error}</p> : null}
@@ -40,7 +53,7 @@ export default function PortalDashboard() {
             <p>
               No orders yet.{' '}
               <Link to="/companies-for-sale">Browse companies for sale</Link> or{' '}
-              <Link to="/#services">formation packages</Link>
+              <Link to="/formations">formation packages</Link>
             </p>
           ) : null}
           <div className="portal-order-list">
