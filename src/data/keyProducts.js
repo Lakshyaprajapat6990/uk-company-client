@@ -39,6 +39,22 @@ export const keyProducts = [
   },
 ]
 
+/** Second hero key-points row (centred). */
+export const keyProductHeroExtras = [
+  {
+    id: 'bbl',
+    title: 'BounceBack Loans Advice',
+    blurb: 'Contact us about companies with Bounce Back Loan issues.',
+    to: '/bbl',
+  },
+  {
+    id: 'international',
+    title: 'Offshore Companies',
+    blurb: 'Packages for founders outside the UK.',
+    to: '/international',
+  },
+]
+
 /** Extra Phase 2 hubs linked from mega menu / footer. */
 export const productHubExtras = [
   {

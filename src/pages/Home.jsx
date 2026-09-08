@@ -4,7 +4,7 @@ import Reveal from '../components/Reveal.jsx'
 import HeroRotator from '../components/HeroRotator.jsx'
 import HeroBackground from '../components/HeroBackground.jsx'
 import { getFormationSlugByTitle } from '../data/formationPages.js'
-import { keyProducts } from '../data/keyProducts.js'
+import { keyProducts, keyProductHeroExtras } from '../data/keyProducts.js'
 import { blogPosts } from '../data/blogPosts.js'
 import {
   agentBenefits,
@@ -121,7 +121,7 @@ export default function Home() {
       <section className="hero" aria-label="Welcome">
         <HeroBackground />
 
-        {/* KEY POINTS SINGLE ROW */}
+        {/* KEY POINTS ROWS */}
         <div className="hero-key-points-wrap animate-in">
           <div className="container">
             <nav className="hero-key-points-row" aria-label="Key products">
@@ -146,6 +146,13 @@ export default function Home() {
                   </Link>
                 )
               )}
+            </nav>
+            <nav className="hero-key-points-row hero-key-points-row--extras" aria-label="More key products">
+              {keyProductHeroExtras.map((item) => (
+                <Link key={item.id} to={item.to} className="hero-key-point-block">
+                  <span>{item.title}</span>
+                </Link>
+              ))}
             </nav>
           </div>
         </div>

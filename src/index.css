@@ -1063,6 +1063,12 @@ img {
   width: 100%;
 }
 
+.hero-key-points-row--extras {
+  grid-template-columns: repeat(2, minmax(160px, 220px));
+  justify-content: center;
+  margin-top: 12px;
+}
+
 .hero-key-point-block {
   display: flex;
   align-items: center;
@@ -3588,6 +3594,14 @@ img {
     gap: 8px;
     overflow: visible;
     padding-bottom: 0;
+  }
+
+  .hero-key-points-row--extras {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
   }
 
   .hero-key-point-block {
@@ -6696,6 +6710,14 @@ img {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .hero-key-points-row--extras {
+    grid-template-columns: repeat(2, minmax(0, 200px));
+    justify-content: center;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .offers-grid {
     grid-template-columns: 1fr;
   }
@@ -6744,6 +6766,12 @@ img {
   .hero-key-points-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+  }
+
+  .hero-key-points-row--extras {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 100%;
+    margin-top: 8px;
   }
 
   .hero-key-point-block {
