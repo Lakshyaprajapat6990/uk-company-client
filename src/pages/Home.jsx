@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import HeroRotator from '../components/HeroRotator.jsx'
@@ -6,16 +6,17 @@ import HeroBackground from '../components/HeroBackground.jsx'
 import { getFormationSlugByTitle } from '../data/formationPages.js'
 import { keyProducts, keyProductHeroExtras } from '../data/keyProducts.js'
 import { blogPosts } from '../data/blogPosts.js'
+import { homepageApi } from '../lib/api.js'
 import {
   agentBenefits,
-  faqs,
+  faqs as defaultFaqs,
   included,
   informationGuides,
   products,
   serviceTabs,
   steps,
-  trustPoints,
-  whyChoose,
+  trustPoints as defaultTrustPoints,
+  whyChoose as defaultWhyChoose,
 } from '../data/content.js'
 
 const Arrow = () => (
@@ -64,7 +65,7 @@ const ServiceIcon = ({ name }) => {
 
 const newsImages = ['/news-1.jpg', '/news-2.jpg', '/news-3.jpg']
 
-const specialOffers = [
+const fallbackOffers = [
   {
     title: 'Formation from £107',
     text: 'Limited company ready to trade - Companies House fee included.',
@@ -85,7 +86,7 @@ const specialOffers = [
   },
 ]
 
-const featuredPlans = [
+const fallbackPlans = [
   {
     name: 'Limited Company',
     desc: 'Most common Companies House registration for medium, small and micro businesses.',
@@ -111,9 +112,29 @@ const featuredPlans = [
 
 export default function Home() {
   const [tab, setTab] = useState('ltd')
+  const [cms, setCms] = useState(null)
   const activeProducts = useMemo(() => products[tab] || [], [tab])
   const serviceVariants = ['left', 'popup', 'right']
   const newsVariants = ['bottom', 'float', 'top']
+
+  useEffect(() => {
+    homepageApi
+      .get()
+      .then((data) => setCms(data.homepage || null))
+      .catch(() => setCms(null))
+  }, [])
+
+  const hero = cms?.hero || {}
+  const offersSection = cms?.offersSection || {}
+  const specialOffers = cms?.offers?.length ? cms.offers : fallbackOffers
+  const welcome = cms?.welcome || {}
+  const trustPoints = cms?.trustPoints?.length ? cms.trustPoints : defaultTrustPoints
+  const pricesSection = cms?.pricesSection || {}
+  const featuredPlans = cms?.featuredPlans?.length ? cms.featuredPlans : fallbackPlans
+  const whySection = cms?.whySection || {}
+  const whyChoose = cms?.whyChoose?.length ? cms.whyChoose : defaultWhyChoose
+  const faqSection = cms?.faqSection || {}
+  const faqs = cms?.faqs?.length ? cms.faqs : defaultFaqs
 
   return (
     <>
@@ -160,19 +181,25 @@ export default function Home() {
         <div className="container hero-grid">
           <div className="hero-copy animate-in">
             <p className="brand-kicker">
-              Welcome to UK.company! Online company formation from <span className="brand-kicker-price">£107</span>
+              {hero.kickerPrefix || 'Welcome to UK.company! Online company formation from'}{' '}
+              <span className="brand-kicker-price">{hero.kickerPrice || '£107'}</span>
             </p>
-            <h1>You run your business. We&apos;ll form your company.</h1>
-            <p className="hero-sub">Register a company and apply for a bank account today.</p>
+            <h1>{hero.title || "You run your business. We'll form your company."}</h1>
+            <p className="hero-sub">
+              {hero.subtitle || 'Register a company and apply for a bank account today.'}
+            </p>
             <div className="hero-actions">
-              <Link to="/formation/ltd-or-private-limited-company-formation-in-uk" className="btn btn-primary btn-lg">
-                Start formation
+              <Link
+                to={hero.primaryCtaTo || '/formation/ltd-or-private-limited-company-formation-in-uk'}
+                className="btn btn-primary btn-lg"
+              >
+                {hero.primaryCtaLabel || 'Start formation'}
               </Link>
-              <Link to="/companies-for-sale" className="btn btn-outline-light btn-lg">
-                Companies for sale
+              <Link to={hero.secondaryCtaTo || '/companies-for-sale'} className="btn btn-outline-light btn-lg">
+                {hero.secondaryCtaLabel || 'Companies for sale'}
               </Link>
-              <a href="#prices" className="btn btn-outline hero-btn-secondary">
-                View packages
+              <a href={hero.tertiaryCtaHref || '#prices'} className="btn btn-outline hero-btn-secondary">
+                {hero.tertiaryCtaLabel || 'View packages'}
               </a>
             </div>
           </div>
@@ -186,20 +213,21 @@ export default function Home() {
       <section className="offers-section" id="offers">
         <div className="container">
           <Reveal variant="top">
-            <p className="section-label center">Special offers</p>
-            <h2 className="center-title">Discount packs and rotating deals</h2>
+            <p className="section-label center">{offersSection.label || 'Special offers'}</p>
+            <h2 className="center-title">{offersSection.title || 'Discount packs and rotating deals'}</h2>
             <p className="prices-lead">
-              Clear calls to action - form a new company, reserve a shelf company, or add VAT in one click.
+              {offersSection.lead ||
+                'Clear calls to action - form a new company, reserve a shelf company, or add VAT in one click.'}
             </p>
           </Reveal>
           <div className="offers-grid">
             {specialOffers.map((offer, i) => (
-              <Reveal key={offer.title} delay={i * 100} variant="popup">
+              <Reveal key={`${offer.title}-${i}`} delay={i * 100} variant="popup">
                 <article className="offer-card">
                   <span className="offer-badge">{offer.badge}</span>
                   <h3>{offer.title}</h3>
                   <p>{offer.text}</p>
-                  <Link to={offer.to} className="btn btn-primary">
+                  <Link to={offer.to || '/'} className="btn btn-primary">
                     Get this offer
                   </Link>
                 </article>
@@ -213,11 +241,11 @@ export default function Home() {
       <section className="welcome-section">
         <div className="container welcome-inner">
           <Reveal className="welcome-intro" variant="top">
-            <p className="section-label anim-blink-soft">You are welcome</p>
-            <h2>Company formation in the UK has never been easier</h2>
+            <p className="section-label anim-blink-soft">{welcome.label || 'You are welcome'}</p>
+            <h2>{welcome.title || 'Company formation in the UK has never been easier'}</h2>
             <p className="welcome-lead">
-              Pick &amp; mix the services you need - no inflated bundles. Transparent pricing, approved Companies House
-              agents, and free lifetime support via your company administration portal.
+              {welcome.lead ||
+                'Pick & mix the services you need - no inflated bundles. Transparent pricing, approved Companies House agents, and free lifetime support via your company administration portal.'}
             </p>
           </Reveal>
           <div className="feature-pair feature-pair--four">
@@ -248,8 +276,8 @@ export default function Home() {
       <section className="split-section" id="why">
         <div className="container split-row">
           <Reveal className="split-copy" variant="left">
-            <p className="section-label">Why choose us</p>
-            <h2>Why choose UK.company for your company formation?</h2>
+            <p className="section-label">{whySection.label || 'Why choose us'}</p>
+            <h2>{whySection.title || 'Why choose UK.company for your company formation?'}</h2>
             <p>
               Our team have been supplying address and company formation services since 2011. We are authorised by
               Companies House and keep prices amongst the lowest of any formation agent in London.
@@ -436,8 +464,8 @@ export default function Home() {
       <section className="services-section" id="why-details">
         <div className="container">
           <Reveal className="services-intro" variant="bottom">
-            <p className="section-label">Why UK.company</p>
-            <h2>Experience, privacy and specialised services</h2>
+            <p className="section-label">{whySection.label || 'Why UK.company'}</p>
+            <h2>{whySection.title || 'Experience, privacy and specialised services'}</h2>
           </Reveal>
           <div className="include-grid">
             {whyChoose.map((item) => (
@@ -463,11 +491,11 @@ export default function Home() {
       <section className="prices-section packages-window" id="prices">
         <div className="container">
           <Reveal variant="top">
-            <p className="section-label center">Packages</p>
-            <h2 className="center-title">Formation packages window</h2>
+            <p className="section-label center">{pricesSection.label || 'Packages'}</p>
+            <h2 className="center-title">{pricesSection.title || 'Formation packages window'}</h2>
             <p className="prices-lead">
-              No hidden charges. Pick the pack that fits your business - Limited Company, privacy address, or non-UK
-              resident formation.
+              {pricesSection.lead ||
+                'No hidden charges. Pick the pack that fits your business - Limited Company, privacy address, or non-UK resident formation.'}
             </p>
           </Reveal>
           <div className="price-grid price-grid--3">
@@ -548,8 +576,8 @@ export default function Home() {
       <section className="services-section" id="faqs">
         <div className="container">
           <Reveal className="services-intro" variant="top">
-            <p className="section-label">FAQs</p>
-            <h2>Frequently asked questions for our new customers</h2>
+            <p className="section-label">{faqSection.label || 'FAQs'}</p>
+            <h2>{faqSection.title || 'Frequently asked questions for our new customers'}</h2>
           </Reveal>
           <div className="faq-list">
             {faqs.map((item) => (

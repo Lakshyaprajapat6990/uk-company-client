@@ -7034,3 +7034,75 @@ img {
     justify-content: center;
   }
 }
+
+.admin-home-form {
+  display: grid;
+  gap: 22px;
+}
+
+.admin-home-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.admin-home-section h3 {
+  margin: 0;
+  color: var(--on-light-heading);
+}
+
+.admin-home-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--on-light-heading);
+}
+
+.admin-home-form input,
+.admin-home-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  color: var(--on-light-heading);
+  background: #fff;
+}
+
+.admin-home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-home-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  background: #f8fafc;
+}
+
+.admin-home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-check {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  grid-template-columns: none !important;
+}
+
+@media (max-width: 900px) {
+  .admin-home-grid {
+    grid-template-columns: 1fr;
+  }
+}

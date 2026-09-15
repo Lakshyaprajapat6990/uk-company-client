@@ -86,10 +86,17 @@ export const adminApi = {
   deleteCompany: (id) => api(`/admin/companies/${id}`, { method: 'DELETE' }),
   subscribers: () => api('/admin/subscribers'),
   deleteSubscriber: (id) => api(`/admin/subscribers/${id}`, { method: 'DELETE' }),
+  getHomepage: () => api('/admin/homepage'),
+  saveHomepage: (body) => api('/admin/homepage', { method: 'PUT', body }),
+  resetHomepage: () => api('/admin/homepage/reset', { method: 'POST' }),
 }
 
 export const newsletterApi = {
   subscribe: (body) => api('/newsletter/subscribe', { method: 'POST', body }),
+}
+
+export const homepageApi = {
+  get: () => api('/homepage'),
 }
 
 export const PENDING_ORDER_KEY = 'uk_pending_order'

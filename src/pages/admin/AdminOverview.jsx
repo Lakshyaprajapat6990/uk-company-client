@@ -57,6 +57,12 @@ export default function AdminOverview() {
         <h2>Quick links</h2>
         <ul>
           <li>
+            <Link to="/admin/homepage">Edit homepage content</Link>
+          </li>
+          <li>
+            <Link to="/admin/subscribers">Newsletter subscribers</Link>
+          </li>
+          <li>
             <Link to="/admin/orders">Review orders &amp; ID verification status</Link>
           </li>
           <li>

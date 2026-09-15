@@ -33,6 +33,7 @@ import AdminOrders from './pages/admin/AdminOrders.jsx'
 import AdminCompanies from './pages/admin/AdminCompanies.jsx'
 import AdminUsers from './pages/admin/AdminUsers.jsx'
 import AdminSubscribers from './pages/admin/AdminSubscribers.jsx'
+import AdminHomepage from './pages/admin/AdminHomepage.jsx'
 import CookieConsent from './components/CookieConsent.jsx'
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx'
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx'
@@ -111,6 +112,7 @@ export default function App() {
             <Route path="companies" element={<AdminCompanies />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="subscribers" element={<AdminSubscribers />} />
+            <Route path="homepage" element={<AdminHomepage />} />
           </Route>
         </Routes>
       </main>
