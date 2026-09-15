@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Logo from './Logo.jsx'
 import { Link } from 'react-router-dom'
 import { footer } from '../data/content.js'
+import { newsletterApi } from '../lib/api.js'
+import { openCookiePreferences } from './CookieConsent.jsx'
 
 const IconFacebook = () => (
   <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="currentColor">
@@ -46,15 +48,24 @@ const social = [
 export default function Footer() {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
 
-  function handleNewsletter(e) {
+  async function handleNewsletter(e) {
     e.preventDefault()
     const value = email.trim()
     if (!value) return
-    const subject = 'Newsletter signup'
-    const body = `Please add this email to the UK.company newsletter:\n\n${value}`
-    window.location.href = `mailto:info@uk.company?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent(true)
+    setError('')
+    setBusy(true)
+    try {
+      await newsletterApi.subscribe({ email: value, source: 'footer' })
+      setSent(true)
+      setEmail('')
+    } catch (err) {
+      setError(err.message || 'Could not subscribe right now')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -63,9 +74,7 @@ export default function Footer() {
         <div className="footer-newsletter">
           <h2>Stay up to date with upcoming workshops and new products</h2>
           {sent ? (
-            <p className="newsletter-success">
-              Thanks - your email app should open so you can confirm the signup.
-            </p>
+            <p className="newsletter-success">Thanks - you are on the newsletter list.</p>
           ) : (
             <form className="newsletter-form" onSubmit={handleNewsletter}>
               <label htmlFor="newsletter-email">Email Address</label>
@@ -83,8 +92,9 @@ export default function Footer() {
                 <Link to="/privacy">Privacy Policy</Link> and <Link to="/terms">Terms of Use</Link>{' '}
                 and want to receive news.
               </p>
-              <button type="submit" className="btn btn-primary newsletter-submit">
-                Submit
+              {error ? <p className="auth-error">{error}</p> : null}
+              <button type="submit" className="btn btn-primary newsletter-submit" disabled={busy}>
+                {busy ? 'Saving...' : 'Submit'}
               </button>
             </form>
           )}
@@ -154,7 +164,10 @@ export default function Footer() {
             <span>
               UK.company © {new Date().getFullYear()}. All Rights Reserved.{' '}
               <Link to="/privacy">Privacy</Link> · <Link to="/terms">Terms</Link> ·{' '}
-              <Link to="/cookies">Cookies</Link>
+              <Link to="/cookies">Cookies</Link> ·{' '}
+              <button type="button" className="footer-cookie-btn" onClick={openCookiePreferences}>
+                Cookie settings
+              </button>
             </span>
             <span className="footer-legal-line">
               {footer.tradingName}

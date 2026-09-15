@@ -30,6 +30,19 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(user),
       async login(email, password) {
         const data = await authApi.login({ email, password })
+        if (data.requiresTwoFactor) {
+          return {
+            requiresTwoFactor: true,
+            preAuthToken: data.preAuthToken,
+            message: data.message,
+          }
+        }
+        localStorage.setItem('uk_token', data.token)
+        setUser(data.user)
+        return data.user
+      },
+      async verifyTwoFactor(preAuthToken, code) {
+        const data = await authApi.verify2FA({ preAuthToken, code })
         localStorage.setItem('uk_token', data.token)
         setUser(data.user)
         return data.user

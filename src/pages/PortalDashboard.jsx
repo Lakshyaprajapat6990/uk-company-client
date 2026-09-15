@@ -38,6 +38,9 @@ export default function PortalDashboard() {
                 Open admin CMS
               </Link>
             ) : null}
+            <Link to="/account/password" className="btn btn-outline">
+              Change password
+            </Link>
             <button type="button" className="btn btn-outline" onClick={logout}>
               Log out
             </button>

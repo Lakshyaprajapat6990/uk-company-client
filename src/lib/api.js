@@ -34,6 +34,12 @@ export async function api(path, options = {}) {
 export const authApi = {
   register: (body) => api('/auth/register', { method: 'POST', body }),
   login: (body) => api('/auth/login', { method: 'POST', body }),
+  verify2FA: (body) => api('/auth/2fa/verify', { method: 'POST', body }),
+  setup2FA: () => api('/auth/2fa/setup', { method: 'POST' }),
+  enable2FA: (body) => api('/auth/2fa/enable', { method: 'POST', body }),
+  forgotPassword: (body) => api('/auth/forgot-password', { method: 'POST', body }),
+  resetPassword: (body) => api('/auth/reset-password', { method: 'POST', body }),
+  changePassword: (body) => api('/auth/change-password', { method: 'POST', body }),
   me: () => api('/auth/me'),
 }
 
@@ -78,6 +84,12 @@ export const adminApi = {
   createCompany: (body) => api('/admin/companies', { method: 'POST', body }),
   updateCompany: (id, body) => api(`/admin/companies/${id}`, { method: 'PATCH', body }),
   deleteCompany: (id) => api(`/admin/companies/${id}`, { method: 'DELETE' }),
+  subscribers: () => api('/admin/subscribers'),
+  deleteSubscriber: (id) => api(`/admin/subscribers/${id}`, { method: 'DELETE' }),
+}
+
+export const newsletterApi = {
+  subscribe: (body) => api('/newsletter/subscribe', { method: 'POST', body }),
 }
 
 export const PENDING_ORDER_KEY = 'uk_pending_order'

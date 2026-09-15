@@ -32,6 +32,11 @@ import AdminOverview from './pages/admin/AdminOverview.jsx'
 import AdminOrders from './pages/admin/AdminOrders.jsx'
 import AdminCompanies from './pages/admin/AdminCompanies.jsx'
 import AdminUsers from './pages/admin/AdminUsers.jsx'
+import AdminSubscribers from './pages/admin/AdminSubscribers.jsx'
+import CookieConsent from './components/CookieConsent.jsx'
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx'
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx'
+import ChangePasswordPage from './pages/ChangePasswordPage.jsx'
 
 export default function App() {
   return (
@@ -67,6 +72,16 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route
+            path="/account/password"
+            element={
+              <ProtectedRoute>
+                <ChangePasswordPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/portal"
             element={
@@ -95,10 +110,12 @@ export default function App() {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="companies" element={<AdminCompanies />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="subscribers" element={<AdminSubscribers />} />
           </Route>
         </Routes>
       </main>
       <Footer />
+      <CookieConsent />
     </div>
   )
 }
