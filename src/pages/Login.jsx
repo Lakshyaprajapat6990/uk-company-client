@@ -18,6 +18,10 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [code, setCode] = useState('')
   const [preAuthToken, setPreAuthToken] = useState('')
+  const [twoFactorMethod, setTwoFactorMethod] = useState('email')
+  const [emailHint, setEmailHint] = useState('')
+  const [emailSent, setEmailSent] = useState(true)
+  const [devCode, setDevCode] = useState('')
   const [step, setStep] = useState('password')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -35,6 +39,10 @@ export default function Login() {
       const result = await login(email, password)
       if (result?.requiresTwoFactor) {
         setPreAuthToken(result.preAuthToken)
+        setTwoFactorMethod(result.method || 'email')
+        setEmailHint(result.emailHint || '')
+        setEmailSent(result.emailSent !== false)
+        setDevCode(result.devCode || '')
         setStep('2fa')
         setCode('')
         return
@@ -61,13 +69,20 @@ export default function Login() {
     }
   }
 
+  const twoFactorLead =
+    twoFactorMethod === 'app'
+      ? 'Open Google Authenticator or Microsoft Authenticator and enter the 6-digit code.'
+      : emailSent
+        ? `We sent a 6-digit code to ${emailHint || 'your email'}. Check your inbox (and spam).`
+        : 'Email sending is not configured on the server yet. Ask the developer to set SMTP, or use the temporary code shown below if available.'
+
   return (
     <section className="auth-page">
       <div className="container auth-card">
         <h1>Account login</h1>
         <p className="auth-lead">
           {step === '2fa'
-            ? 'Enter the 6-digit code from your authenticator app to finish signing in.'
+            ? twoFactorLead
             : 'Sign in to manage UK.company orders. Admins are taken to the CMS. Customers use the portal for formations and ready-made company reservations.'}
         </p>
 
@@ -108,8 +123,13 @@ export default function Login() {
             <p className="auth-lead" style={{ marginBottom: 0 }}>
               Signed in as <strong>{email}</strong>
             </p>
+            {devCode ? (
+              <p className="auth-success">
+                Temporary code (SMTP not live yet): <strong>{devCode}</strong>
+              </p>
+            ) : null}
             <label>
-              Authentication code
+              {twoFactorMethod === 'app' ? 'Authentication code' : 'Email code'}
               <input
                 type="text"
                 inputMode="numeric"
@@ -134,6 +154,7 @@ export default function Login() {
                 setStep('password')
                 setPreAuthToken('')
                 setCode('')
+                setDevCode('')
                 setError('')
               }}
             >

@@ -1,31 +1,28 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { authApi } from '../lib/api.js'
+import { newsletterApi } from '../lib/api.js'
 import usePageMeta from '../hooks/usePageMeta.js'
 
-export default function ForgotPasswordPage() {
+export default function UnsubscribePage() {
   usePageMeta(
-    'Forgot password | UK.company',
-    'Request a password reset link for your UK.company account.',
-    '/forgot-password'
+    'Unsubscribe | UK.company',
+    'Unsubscribe from the UK.company newsletter.',
+    '/unsubscribe'
   )
 
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const [devLink, setDevLink] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
 
   async function onSubmit(e) {
     e.preventDefault()
+    setBusy(true)
     setError('')
     setMessage('')
-    setDevLink('')
-    setBusy(true)
     try {
-      const data = await authApi.forgotPassword({ email })
-      setMessage(data.message || 'If that email is registered, a reset link has been sent.')
-      if (data.resetUrl) setDevLink(data.resetUrl)
+      const data = await newsletterApi.unsubscribe({ email })
+      setMessage(data.message || 'You have been unsubscribed.')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -36,19 +33,13 @@ export default function ForgotPasswordPage() {
   return (
     <section className="auth-page">
       <div className="container auth-card">
-        <h1>Forgot password</h1>
+        <h1>Unsubscribe</h1>
         <p className="auth-lead">
-          Enter your account email and we will send a password reset link to your inbox.
+          Enter your email to stop receiving UK.company newsletter updates.
         </p>
-        <form onSubmit={onSubmit} className="auth-form">
+        <form className="auth-form" onSubmit={onSubmit}>
           {error ? <p className="auth-error">{error}</p> : null}
           {message ? <p className="auth-success">{message}</p> : null}
-          {devLink ? (
-            <p className="auth-success">
-              Reset link (shown when email SMTP is not live yet):{' '}
-              <a href={devLink}>{devLink}</a>
-            </p>
-          ) : null}
           <label>
             Email
             <input
@@ -60,11 +51,11 @@ export default function ForgotPasswordPage() {
             />
           </label>
           <button className="btn btn-primary btn-block" disabled={busy}>
-            {busy ? 'Sending...' : 'Send reset link'}
+            {busy ? 'Updating…' : 'Unsubscribe'}
           </button>
         </form>
         <p className="auth-switch">
-          <Link to="/login">Back to login</Link>
+          <Link to="/">Back to home</Link>
         </p>
       </div>
     </section>

@@ -35,9 +35,12 @@ import AdminUsers from './pages/admin/AdminUsers.jsx'
 import AdminSubscribers from './pages/admin/AdminSubscribers.jsx'
 import AdminHomepage from './pages/admin/AdminHomepage.jsx'
 import CookieConsent from './components/CookieConsent.jsx'
+import ConsentAnalytics from './components/ConsentAnalytics.jsx'
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx'
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx'
 import ChangePasswordPage from './pages/ChangePasswordPage.jsx'
+import VerifyEmailPage from './pages/VerifyEmailPage.jsx'
+import UnsubscribePage from './pages/UnsubscribePage.jsx'
 
 export default function App() {
   return (
@@ -75,6 +78,8 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/unsubscribe" element={<UnsubscribePage />} />
           <Route
             path="/account/password"
             element={
@@ -118,6 +123,7 @@ export default function App() {
       </main>
       <Footer />
       <CookieConsent />
+      <ConsentAnalytics />
     </div>
   )
 }

@@ -49,6 +49,9 @@ export default function AdminCompanies() {
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [importing, setImporting] = useState(false)
+  const [importSummary, setImportSummary] = useState(null)
+  const [excelFile, setExcelFile] = useState(null)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(EMPTY)
 
@@ -126,6 +129,45 @@ export default function AdminCompanies() {
     }
   }
 
+  async function handleDownloadTemplate() {
+    setError('')
+    try {
+      const blob = await adminApi.downloadCompanyTemplate()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'companies-import-template.xlsx'
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  async function handleExcelImport(e) {
+    e.preventDefault()
+    if (!excelFile) {
+      setError('Choose an Excel (.xlsx) or CSV file first.')
+      return
+    }
+    setImporting(true)
+    setError('')
+    setSuccess('')
+    setImportSummary(null)
+    try {
+      const data = await adminApi.importCompanies(excelFile)
+      setCompanies(data.companies || [])
+      setImportSummary(data.summary || null)
+      setSuccess(data.message || 'Import finished.')
+      setExcelFile(null)
+      e.target.reset?.()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setImporting(false)
+    }
+  }
+
   return (
     <div className="admin-panel">
       <div className="admin-toolbar">
@@ -142,6 +184,55 @@ export default function AdminCompanies() {
 
       {error ? <p className="auth-error">{error}</p> : null}
       {success ? <p className="auth-success">{success}</p> : null}
+
+      <section className="admin-company-form admin-import-box">
+        <h3>Upload Excel / CSV</h3>
+        <p className="admin-import-help">
+          Upload a spreadsheet to add or update all companies at once. Matching is by{' '}
+          <strong>company number</strong> (existing rows are updated). Use columns like:{' '}
+          <code>name</code>, <code>companyNumber</code>, <code>incorporatedOn</code>,{' '}
+          <code>price</code>, optional <code>listNo</code>, <code>slug</code>, <code>note</code>,{' '}
+          <code>featured</code>, <code>status</code>.
+        </p>
+        <form className="admin-import-form" onSubmit={handleExcelImport}>
+          <label className="admin-import-file">
+            Excel file
+            <input
+              type="file"
+              accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
+              onChange={(e) => setExcelFile(e.target.files?.[0] || null)}
+            />
+          </label>
+          <div className="admin-form-actions">
+            <button type="submit" className="btn btn-primary" disabled={importing || !excelFile}>
+              {importing ? 'Importing…' : 'Upload and import'}
+            </button>
+            <button type="button" className="btn btn-outline" onClick={handleDownloadTemplate}>
+              Download template
+            </button>
+          </div>
+        </form>
+        {importSummary ? (
+          <div className="admin-import-summary">
+            <p>
+              Created {importSummary.created}, updated {importSummary.updated}, skipped{' '}
+              {importSummary.skipped} (of {importSummary.totalRows} rows).
+            </p>
+            {importSummary.errors?.length ? (
+              <ul>
+                {importSummary.errors.slice(0, 12).map((err) => (
+                  <li key={`${err.row}-${err.message}`}>
+                    Row {err.row}: {err.message}
+                  </li>
+                ))}
+                {importSummary.errors.length > 12 ? (
+                  <li>…and {importSummary.errors.length - 12} more</li>
+                ) : null}
+              </ul>
+            ) : null}
+          </div>
+        ) : null}
+      </section>
 
       <form className="admin-company-form" onSubmit={handleSubmit}>
         <h3>{editingId ? 'Edit company' : 'Add company'}</h3>

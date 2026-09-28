@@ -56,6 +56,7 @@ export default function CookieConsent() {
     setPrefs(payload.prefs)
     setManageOpen(false)
     setVisible(false)
+    window.dispatchEvent(new CustomEvent('uk-cookie-consent-changed', { detail: payload }))
   }
 
   if (!visible) return null

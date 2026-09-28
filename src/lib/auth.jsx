@@ -34,6 +34,10 @@ export function AuthProvider({ children }) {
           return {
             requiresTwoFactor: true,
             preAuthToken: data.preAuthToken,
+            method: data.method || 'email',
+            emailHint: data.emailHint || '',
+            emailSent: data.emailSent,
+            devCode: data.devCode || '',
             message: data.message,
           }
         }
@@ -50,6 +54,15 @@ export function AuthProvider({ children }) {
       async register(payload) {
         const data = await authApi.register(payload)
         localStorage.setItem('uk_token', data.token)
+        setUser(data.user)
+        return data.user
+      },
+      setUserFromApi(nextUser) {
+        if (!nextUser) return
+        setUser((prev) => ({ ...(prev || {}), ...nextUser }))
+      },
+      async refreshUser() {
+        const data = await authApi.me()
         setUser(data.user)
         return data.user
       },

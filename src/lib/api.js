@@ -40,6 +40,8 @@ export const authApi = {
   forgotPassword: (body) => api('/auth/forgot-password', { method: 'POST', body }),
   resetPassword: (body) => api('/auth/reset-password', { method: 'POST', body }),
   changePassword: (body) => api('/auth/change-password', { method: 'POST', body }),
+  verifyEmail: (body) => api('/auth/verify-email', { method: 'POST', body }),
+  resendVerification: () => api('/auth/resend-verification', { method: 'POST' }),
   me: () => api('/auth/me'),
 }
 
@@ -84,8 +86,46 @@ export const adminApi = {
   createCompany: (body) => api('/admin/companies', { method: 'POST', body }),
   updateCompany: (id, body) => api(`/admin/companies/${id}`, { method: 'PATCH', body }),
   deleteCompany: (id) => api(`/admin/companies/${id}`, { method: 'DELETE' }),
-  subscribers: () => api('/admin/subscribers'),
+  importCompanies: async (file) => {
+    const form = new FormData()
+    form.append('file', file)
+    return api('/admin/companies/import', { method: 'POST', body: form })
+  },
+  downloadCompanyTemplate: async () => {
+    const token = getToken()
+    const res = await fetch(`${API_BASE}/admin/companies/import-template`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      throw new Error(data.message || `Request failed (${res.status})`)
+    }
+    return res.blob()
+  },
+  subscribers: (params = {}) => {
+    const q = new URLSearchParams()
+    if (params.q) q.set('q', params.q)
+    if (params.status) q.set('status', params.status)
+    if (params.limit) q.set('limit', String(params.limit))
+    const qs = q.toString()
+    return api(`/admin/subscribers${qs ? `?${qs}` : ''}`)
+  },
+  updateSubscriber: (id, body) => api(`/admin/subscribers/${id}`, { method: 'PATCH', body }),
   deleteSubscriber: (id) => api(`/admin/subscribers/${id}`, { method: 'DELETE' }),
+  exportSubscribers: async (params = {}) => {
+    const q = new URLSearchParams()
+    if (params.status) q.set('status', params.status)
+    const qs = q.toString()
+    const token = getToken()
+    const res = await fetch(`${API_BASE}/admin/subscribers/export${qs ? `?${qs}` : ''}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      throw new Error(data.message || `Request failed (${res.status})`)
+    }
+    return res.blob()
+  },
   getHomepage: () => api('/admin/homepage'),
   saveHomepage: (body) => api('/admin/homepage', { method: 'PUT', body }),
   resetHomepage: () => api('/admin/homepage/reset', { method: 'POST' }),
@@ -93,6 +133,7 @@ export const adminApi = {
 
 export const newsletterApi = {
   subscribe: (body) => api('/newsletter/subscribe', { method: 'POST', body }),
+  unsubscribe: (body) => api('/newsletter/unsubscribe', { method: 'POST', body }),
 }
 
 export const homepageApi = {

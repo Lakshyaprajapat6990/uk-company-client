@@ -164,7 +164,7 @@ export default function Footer() {
             <span>
               UK.company © {new Date().getFullYear()}. All Rights Reserved.{' '}
               <Link to="/privacy">Privacy</Link> · <Link to="/terms">Terms</Link> ·{' '}
-              <Link to="/cookies">Cookies</Link> ·{' '}
+              <Link to="/cookies">Cookies</Link> · <Link to="/unsubscribe">Unsubscribe</Link> ·{' '}
               <button type="button" className="footer-cookie-btn" onClick={openCookiePreferences}>
                 Cookie settings
               </button>

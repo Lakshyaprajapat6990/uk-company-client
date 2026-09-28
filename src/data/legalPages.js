@@ -89,13 +89,14 @@ export const legalPages = {
         heading: 'How we use cookies',
         paragraphs: [
           'We use essential cookies for core functions such as keeping you signed in to the customer portal and remembering your shopping cart in the browser.',
-          'We may use analytics cookies to understand which pages are useful, so we can improve the site. You can control cookies through your browser settings.',
+          'Optional analytics cookies are used only if you accept them in the cookie banner. Marketing cookies are also optional and off by default until you choose them.',
         ],
       },
       {
         heading: 'Managing cookies',
         paragraphs: [
-          'Most browsers let you block or delete cookies. Blocking essential cookies may stop login, cart or reservation features from working correctly.',
+          'Use the cookie banner on first visit, or open Cookie preferences from the website footer at any time.',
+          'Most browsers also let you block or delete cookies. Blocking essential cookies may stop login, cart or reservation features from working correctly.',
           'For privacy questions, email info@uk.company or read our Privacy Policy.',
         ],
       },

@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../lib/auth.jsx'
-import { ordersApi } from '../lib/api.js'
+import { authApi, ordersApi } from '../lib/api.js'
 
 export default function PortalDashboard() {
-  const { user, logout } = useAuth()
+  const { user, logout, refreshUser } = useAuth()
   const [orders, setOrders] = useState([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [verifyMsg, setVerifyMsg] = useState('')
+  const [verifyBusy, setVerifyBusy] = useState(false)
 
   useEffect(() => {
     ordersApi
@@ -16,6 +18,21 @@ export default function PortalDashboard() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
   }, [])
+
+  async function resendVerification() {
+    setVerifyBusy(true)
+    setVerifyMsg('')
+    setError('')
+    try {
+      const data = await authApi.resendVerification()
+      setVerifyMsg(data.message || 'Verification email sent.')
+      if (data.user) await refreshUser?.()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setVerifyBusy(false)
+    }
+  }
 
   return (
     <section className="portal-page">
@@ -46,6 +63,24 @@ export default function PortalDashboard() {
             </button>
           </div>
         </div>
+
+        {user && user.role !== 'admin' && !user.emailVerified ? (
+          <div className="auth-success" style={{ marginBottom: 16 }}>
+            <p style={{ margin: 0 }}>
+              Please verify your email (<strong>{user.email}</strong>) to keep your account secure.
+            </p>
+            <button
+              type="button"
+              className="btn btn-outline"
+              style={{ marginTop: 10 }}
+              disabled={verifyBusy}
+              onClick={resendVerification}
+            >
+              {verifyBusy ? 'Sending…' : 'Resend verification email'}
+            </button>
+            {verifyMsg ? <p style={{ margin: '8px 0 0' }}>{verifyMsg}</p> : null}
+          </div>
+        ) : null}
 
         {error ? <p className="auth-error">{error}</p> : null}
         {loading ? <p>Loading orders...</p> : null}

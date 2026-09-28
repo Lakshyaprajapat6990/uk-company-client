@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   /* True dark-blue theme */
   --navy-900: #030b1a;
   --navy-800: #061431;
@@ -5136,6 +5136,55 @@ img {
   border: 1px solid #dbe3f0;
   border-radius: 12px;
   padding: 18px 20px;
+}
+
+.admin-import-box {
+  margin-bottom: 18px;
+}
+
+.admin-import-help {
+  margin: 0 0 14px;
+  color: #475569;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.admin-import-help code {
+  font-size: 0.85em;
+  background: #f1f5f9;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.admin-import-form {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-import-file {
+  display: grid;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.admin-import-file input[type='file'] {
+  font: inherit;
+  font-weight: 500;
+}
+
+.admin-import-summary {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.admin-import-summary ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: #b45309;
 }
 
 .admin-company-form h3 {
