@@ -129,6 +129,11 @@ export const adminApi = {
   getHomepage: () => api('/admin/homepage'),
   saveHomepage: (body) => api('/admin/homepage', { method: 'PUT', body }),
   resetHomepage: () => api('/admin/homepage/reset', { method: 'POST' }),
+  permissions: () => api('/admin/permissions'),
+  staff: () => api('/admin/staff'),
+  createStaff: (body) => api('/admin/staff', { method: 'POST', body }),
+  updateStaff: (id, body) => api(`/admin/staff/${id}`, { method: 'PATCH', body }),
+  deleteStaff: (id) => api(`/admin/staff/${id}`, { method: 'DELETE' }),
 }
 
 export const newsletterApi = {

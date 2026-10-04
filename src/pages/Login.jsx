@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth.jsx'
 import { afterAuthNavigate } from '../lib/authFlow.js'
+import { firstAllowedAdminPath, isStaffUser } from '../lib/permissions.js'
 import usePageMeta from '../hooks/usePageMeta.js'
 
 export default function Login() {
@@ -27,7 +28,8 @@ export default function Login() {
   const [busy, setBusy] = useState(false)
 
   async function finishLogin(user) {
-    const fallback = location.state?.from || (user?.role === 'admin' ? '/admin' : '/portal')
+    const fallback =
+      location.state?.from || (isStaffUser(user) ? firstAllowedAdminPath(user) : '/portal')
     await afterAuthNavigate(user, navigate, fallback)
   }
 

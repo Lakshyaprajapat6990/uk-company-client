@@ -1,4 +1,6 @@
 import { Navigate, Routes, Route } from 'react-router-dom'
+import { useAuth } from './lib/auth.jsx'
+import { firstAllowedAdminPath, hasPermission } from './lib/permissions.js'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
@@ -34,6 +36,7 @@ import AdminCompanies from './pages/admin/AdminCompanies.jsx'
 import AdminUsers from './pages/admin/AdminUsers.jsx'
 import AdminSubscribers from './pages/admin/AdminSubscribers.jsx'
 import AdminHomepage from './pages/admin/AdminHomepage.jsx'
+import AdminStaff from './pages/admin/AdminStaff.jsx'
 import CookieConsent from './components/CookieConsent.jsx'
 import ConsentAnalytics from './components/ConsentAnalytics.jsx'
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx'
@@ -41,6 +44,12 @@ import ResetPasswordPage from './pages/ResetPasswordPage.jsx'
 import ChangePasswordPage from './pages/ChangePasswordPage.jsx'
 import VerifyEmailPage from './pages/VerifyEmailPage.jsx'
 import UnsubscribePage from './pages/UnsubscribePage.jsx'
+
+function AdminIndex() {
+  const { user } = useAuth()
+  if (hasPermission(user, 'overview')) return <AdminOverview />
+  return <Navigate to={firstAllowedAdminPath(user)} replace />
+}
 
 export default function App() {
   return (
@@ -112,12 +121,55 @@ export default function App() {
               </AdminRoute>
             }
           >
-            <Route index element={<AdminOverview />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="companies" element={<AdminCompanies />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="subscribers" element={<AdminSubscribers />} />
-            <Route path="homepage" element={<AdminHomepage />} />
+            <Route index element={<AdminIndex />} />
+            <Route
+              path="orders"
+              element={
+                <AdminRoute permission="orders">
+                  <AdminOrders />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="companies"
+              element={
+                <AdminRoute permission="companies">
+                  <AdminCompanies />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <AdminRoute permission="users">
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="subscribers"
+              element={
+                <AdminRoute permission="subscribers">
+                  <AdminSubscribers />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="homepage"
+              element={
+                <AdminRoute permission="homepage">
+                  <AdminHomepage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="staff"
+              element={
+                <AdminRoute superAdminOnly>
+                  <AdminStaff />
+                </AdminRoute>
+              }
+            />
           </Route>
         </Routes>
       </main>

@@ -200,16 +200,9 @@ export default function Navbar() {
   const location = useLocation()
   const { isAuthenticated, user } = useAuth()
   const { count } = useCart()
-  const accountTo = !isAuthenticated
-    ? '/login'
-    : user?.role === 'admin'
-      ? '/admin'
-      : '/portal'
-  const accountLabel = !isAuthenticated
-    ? 'Account'
-    : user?.role === 'admin'
-      ? 'Admin'
-      : 'Portal'
+  const isStaff = user?.role === 'admin' || user?.role === 'super_admin'
+  const accountTo = !isAuthenticated ? '/login' : isStaff ? '/admin' : '/portal'
+  const accountLabel = !isAuthenticated ? 'Account' : isStaff ? 'Admin' : 'Portal'
 
   const clearCloseTimer = () => {
     if (closeTimer.current) {
@@ -395,11 +388,7 @@ export default function Navbar() {
               >
                 <UserIcon />
                 <span>
-                  {!isAuthenticated
-                    ? 'Account login'
-                    : user?.role === 'admin'
-                      ? 'Admin CMS'
-                      : 'My portal'}
+                  {!isAuthenticated ? 'Account login' : isStaff ? 'Admin CMS' : 'My portal'}
                 </span>
               </Link>
               {!isAuthenticated ? (
@@ -494,11 +483,7 @@ export default function Navbar() {
             </li>
             <li>
               <Link to={accountTo} onClick={closeAll}>
-                {!isAuthenticated
-                  ? 'Account login'
-                  : user?.role === 'admin'
-                    ? 'Admin CMS'
-                    : 'My portal'}
+                {!isAuthenticated ? 'Account login' : isStaff ? 'Admin CMS' : 'My portal'}
               </Link>
             </li>
             {!isAuthenticated ? (
@@ -524,11 +509,7 @@ export default function Navbar() {
               className="btn btn-dark btn-block"
               onClick={closeAll}
             >
-              {!isAuthenticated
-                ? 'Account login'
-                : user?.role === 'admin'
-                  ? 'Admin CMS'
-                  : 'My portal'}{' '}
+              {!isAuthenticated ? 'Account login' : isStaff ? 'Admin CMS' : 'My portal'}{' '}
               <Arrow />
             </Link>
             {!isAuthenticated ? (

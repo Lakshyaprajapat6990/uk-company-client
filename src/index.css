@@ -5257,6 +5257,46 @@ img {
   background: #fef2f2 !important;
 }
 
+.admin-perm-fieldset {
+  border: 1px solid #dbe3f0;
+  border-radius: 10px;
+  padding: 12px 14px 6px;
+  margin: 0;
+}
+
+.admin-perm-fieldset legend {
+  padding: 0 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--on-light-heading);
+}
+
+.admin-perm-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 12px;
+}
+
+.admin-denied {
+  padding: 48px 0;
+}
+
+.admin-denied h2 {
+  margin: 0 0 8px;
+  color: var(--on-light-heading);
+}
+
+.admin-denied p {
+  margin: 0 0 16px;
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  .admin-perm-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .admin-table-note {
   font-size: 0.8rem;
   color: #64748b;

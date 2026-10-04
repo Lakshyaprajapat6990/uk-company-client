@@ -40,7 +40,9 @@ export default function PortalDashboard() {
         <div className="portal-header">
           <div>
             <p className="section-label">
-              {user?.role === 'admin' ? 'Admin · customer view' : 'Customer portal'}
+              {user?.role === 'admin' || user?.role === 'super_admin'
+                ? 'Admin · customer view'
+                : 'Customer portal'}
             </p>
             <h1>Welcome{user?.name ? `, ${user.name}` : ''}</h1>
             <p className="portal-lead">
@@ -50,7 +52,7 @@ export default function PortalDashboard() {
             </p>
           </div>
           <div className="hero-actions">
-            {user?.role === 'admin' ? (
+            {user?.role === 'admin' || user?.role === 'super_admin' ? (
               <Link to="/admin" className="btn btn-primary">
                 Open admin CMS
               </Link>
@@ -64,7 +66,10 @@ export default function PortalDashboard() {
           </div>
         </div>
 
-        {user && user.role !== 'admin' && !user.emailVerified ? (
+        {user &&
+        user.role !== 'admin' &&
+        user.role !== 'super_admin' &&
+        !user.emailVerified ? (
           <div className="auth-success" style={{ marginBottom: 16 }}>
             <p style={{ margin: 0 }}>
               Please verify your email (<strong>{user.email}</strong>) to keep your account secure.

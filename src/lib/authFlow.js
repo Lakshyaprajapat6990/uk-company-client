@@ -1,4 +1,5 @@
 import { ordersApi, PENDING_ORDER_KEY, PENDING_SHELF_KEY, shelfApi } from './api.js'
+import { firstAllowedAdminPath, isStaffUser } from './permissions.js'
 
 /** After login/register: resume pending shelf reserve or formation order. */
 export async function resumePendingOrder(navigate, fallback = '/portal') {
@@ -33,10 +34,10 @@ export async function resumePendingOrder(navigate, fallback = '/portal') {
   }
 }
 
-/** Admins go to CMS; customers resume pending work or portal. */
+/** Staff go to CMS; customers resume pending work or portal. */
 export async function afterAuthNavigate(user, navigate, fallback = '/portal') {
-  if (user?.role === 'admin') {
-    navigate('/admin')
+  if (isStaffUser(user)) {
+    navigate(firstAllowedAdminPath(user))
     return
   }
   await resumePendingOrder(navigate, fallback)
