@@ -35,10 +35,11 @@ import AdminOrders from './pages/admin/AdminOrders.jsx'
 import AdminCompanies from './pages/admin/AdminCompanies.jsx'
 import AdminUsers from './pages/admin/AdminUsers.jsx'
 import AdminSubscribers from './pages/admin/AdminSubscribers.jsx'
-import AdminHomepage from './pages/admin/AdminHomepage.jsx'
+import AdminWebsite from './pages/admin/AdminWebsite.jsx'
 import AdminStaff from './pages/admin/AdminStaff.jsx'
 import CookieConsent from './components/CookieConsent.jsx'
 import ConsentAnalytics from './components/ConsentAnalytics.jsx'
+import EditPageButton from './components/EditPageButton.jsx'
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx'
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx'
 import ChangePasswordPage from './pages/ChangePasswordPage.jsx'
@@ -155,12 +156,16 @@ export default function App() {
               }
             />
             <Route
-              path="homepage"
+              path="website"
               element={
-                <AdminRoute permission="homepage">
-                  <AdminHomepage />
+                <AdminRoute permission="website">
+                  <AdminWebsite />
                 </AdminRoute>
               }
+            />
+            <Route
+              path="homepage"
+              element={<Navigate to="/admin/website?page=home" replace />}
             />
             <Route
               path="staff"
@@ -174,6 +179,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <EditPageButton />
       <CookieConsent />
       <ConsentAnalytics />
     </div>

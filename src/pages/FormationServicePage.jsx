@@ -12,6 +12,7 @@ import {
 import { useAuth } from '../lib/auth.jsx'
 import { ordersApi, PENDING_ORDER_KEY } from '../lib/api.js'
 import { useCart } from '../lib/cart.jsx'
+import useWebsitePage from '../hooks/useWebsitePage.js'
 
 const ADDON_SLUG_MAP = {
   'registered-office': 'registered-office-addon',
@@ -47,7 +48,31 @@ function formatPrice(amount) {
 
 export default function FormationServicePage() {
   const { slug } = useParams()
-  const page = getFormationPage(slug)
+  const localPage = getFormationPage(slug)
+  const { page: cmsPage, content: cms } = useWebsitePage(slug ? `formation-${slug}` : '')
+  const { content: shared } = useWebsitePage('formation-shared')
+  const page = useMemo(() => {
+    if (!localPage) return null
+    return {
+      ...localPage,
+      title: cmsPage?.title || localPage.title,
+      subtitle: cms?.subtitle || localPage.subtitle,
+      description: cms?.description || localPage.description,
+      priceDisplay: cms?.priceDisplay || localPage.priceDisplay,
+      sectionLabel: cms?.sectionLabel || 'Company Formations',
+      orderIntroText:
+        cms?.orderIntroText ||
+        shared?.orderIntroText ||
+        'Select our additional services to help your company get off to the right start and get discounts with 3 or more services.',
+      contentSections:
+        cms?.contentSections?.length > 0 ? cms.contentSections : localPage.contentSections,
+      ctaTitle: cms?.ctaTitle || shared?.ctaTitle || 'Ready to form your company?',
+      ctaText:
+        cms?.ctaText ||
+        shared?.ctaText ||
+        'Start your order today - transparent pricing, no hidden charges, and free lifetime support.',
+    }
+  }, [localPage, cmsPage, cms, shared])
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   const { addItem } = useCart()
@@ -55,10 +80,29 @@ export default function FormationServicePage() {
   const [orderBusy, setOrderBusy] = useState(false)
   const [cartMessage, setCartMessage] = useState('')
 
+  const addonCatalog = useMemo(() => {
+    const cmsAddons = Array.isArray(shared?.addons) ? shared.addons : []
+    return formationAddons.map((addon) => {
+      const override = cmsAddons.find((a) => a.id === addon.id)
+      if (!override) return addon
+      return {
+        ...addon,
+        title: override.title || addon.title,
+        priceDisplay: override.priceDisplay || addon.priceDisplay,
+        description: override.description || addon.description,
+      }
+    })
+  }, [shared])
+
+  const banks = shared?.banks?.length ? shared.banks : bankPartners
+  const includes = shared?.includes?.length ? shared.includes : whatsIncludedDefault
+  const optional = shared?.optional?.length ? shared.optional : optionalFreeServices
+  const extras = shared?.extras?.length ? shared.extras : checkoutExtras
+
   const availableAddons = useMemo(() => {
     if (!page) return []
-    return formationAddons.filter((addon) => !page.bundledAddons.includes(addon.id))
-  }, [page])
+    return addonCatalog.filter((addon) => !page.bundledAddons.includes(addon.id))
+  }, [page, addonCatalog])
 
   const [selectedAddons, setSelectedAddons] = useState(() => new Set())
 
@@ -91,7 +135,7 @@ export default function FormationServicePage() {
   const subtotal = page.price + addonTotal
   const total = subtotal - discount
 
-  const bundledAddonDetails = formationAddons.filter((addon) => page.bundledAddons.includes(addon.id))
+  const bundledAddonDetails = addonCatalog.filter((addon) => page.bundledAddons.includes(addon.id))
 
   async function saveAndContinue() {
     setOrderError('')
@@ -138,7 +182,7 @@ export default function FormationServicePage() {
               <span aria-hidden="true">/</span>
               <span>{page.title}</span>
             </nav>
-            <p className="section-label">Company Formations</p>
+            <p className="section-label">{page.sectionLabel}</p>
             <h1>{page.title}</h1>
             <div className="formation-hero-price">{page.priceDisplay}</div>
             <p className="formation-hero-lead">{page.subtitle}</p>
@@ -152,10 +196,7 @@ export default function FormationServicePage() {
             <Reveal variant="left">
               <div className="formation-order-intro">
                 <h2>{page.subtitle}</h2>
-                <p>
-                  Select our additional services to help your company get off to the right start and get discounts with
-                  3 or more services.
-                </p>
+                <p>{page.orderIntroText}</p>
               </div>
             </Reveal>
 
@@ -260,11 +301,13 @@ export default function FormationServicePage() {
       <section className="formation-banks">
         <div className="container">
           <Reveal variant="top">
-            <h2>Business bank account</h2>
-            <p className="formation-section-lead">You can select a business bank account during the order process.</p>
+            <h2>{shared?.banksTitle || 'Business bank account'}</h2>
+            <p className="formation-section-lead">
+              {shared?.banksLead || 'You can select a business bank account during the order process.'}
+            </p>
           </Reveal>
           <div className="formation-bank-grid">
-            {bankPartners.map((bank, i) => (
+            {banks.map((bank, i) => (
               <Reveal key={bank.name} delay={i * 80} variant="popup">
                 <article className="formation-bank-card">
                   <h3>{bank.name}</h3>
@@ -280,9 +323,9 @@ export default function FormationServicePage() {
         <div className="container formation-includes-grid">
           <Reveal variant="left">
             <div className="formation-include-block">
-              <h2>What&apos;s Included</h2>
+              <h2>{shared?.includesTitle || "What's Included"}</h2>
               <ul className="check-list">
-                {whatsIncludedDefault.map((item) => (
+                {includes.map((item) => (
                   <li key={item}>
                     <Check /> {item}
                   </li>
@@ -292,9 +335,9 @@ export default function FormationServicePage() {
           </Reveal>
           <Reveal variant="right" delay={120}>
             <div className="formation-include-block">
-              <h2>Optional Free Services</h2>
+              <h2>{shared?.optionalTitle || 'Optional Free Services'}</h2>
               <ul className="check-list">
-                {optionalFreeServices.map((item) => (
+                {optional.map((item) => (
                   <li key={item}>
                     <Check /> {item}
                   </li>
@@ -308,11 +351,13 @@ export default function FormationServicePage() {
       <section className="formation-extras">
         <div className="container">
           <Reveal variant="top">
-            <h2>Additional items available at checkout</h2>
-            <p className="formation-section-lead">You can add these items during the order process.</p>
+            <h2>{shared?.extrasTitle || 'Additional items available at checkout'}</h2>
+            <p className="formation-section-lead">
+              {shared?.extrasLead || 'You can add these items during the order process.'}
+            </p>
           </Reveal>
           <div className="formation-extras-grid">
-            {checkoutExtras.map((item, i) => (
+            {extras.map((item, i) => (
               <Reveal key={item.title} delay={(i % 4) * 60} variant="popup">
                 <article className="formation-extra-card">
                   <h3>{item.title}</h3>
@@ -326,7 +371,7 @@ export default function FormationServicePage() {
 
       <section className="formation-content">
         <div className="container formation-content-inner">
-          {page.contentSections.map((section, i) => (
+          {(page.contentSections || []).map((section, i) => (
             <Reveal key={section.title} delay={i * 80} variant="bottom">
               <div className="formation-content-block">
                 <h2>{section.title}</h2>
@@ -348,8 +393,8 @@ export default function FormationServicePage() {
       <section className="formation-cta">
         <div className="container formation-cta-inner">
           <Reveal variant="popup">
-            <h2>Ready to form your company?</h2>
-            <p>Start your order today - transparent pricing, no hidden charges, and free lifetime support.</p>
+            <h2>{page.ctaTitle}</h2>
+            <p>{page.ctaText}</p>
             <div className="hero-actions">
               <button type="button" className="btn btn-outline-light btn-lg" onClick={addToCart}>
                 Add to cart

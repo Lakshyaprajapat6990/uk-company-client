@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal.jsx'
 import { existingCompanies, formatGbp, shelfFaqs } from '../data/existingCompanies.js'
 import { shelfApi } from '../lib/api.js'
 import usePageMeta from '../hooks/usePageMeta.js'
+import useWebsitePage from '../hooks/useWebsitePage.js'
 
 const PAGE_SIZE = 10
 
@@ -19,9 +20,11 @@ function formatDisplayDate(dateStr = '') {
 }
 
 export default function ExistingCompaniesPage() {
+  const { page: cmsPage, content: cms } = useWebsitePage('companies-for-sale')
   usePageMeta(
-    'UK Companies for Sale | Buy Ready-Made Companies | UK.company',
-    'Browse ready-made UK limited companies for sale. Reserve first, complete ID verification, then transfer after proforma payment. Companies House and HMRC regulated (ACSP).',
+    `${cmsPage?.title || 'UK Companies for Sale'} | UK.company`,
+    cmsPage?.metaDescription ||
+      'Browse ready-made UK limited companies for sale. Reserve first, complete ID verification, then transfer after proforma payment. Companies House and HMRC regulated (ACSP).',
     '/companies-for-sale'
   )
 
@@ -112,11 +115,11 @@ export default function ExistingCompaniesPage() {
               <span aria-hidden="true">/</span>
               <span>Companies for sale</span>
             </nav>
-            <p className="section-label">Existing UK companies</p>
-            <h1>Companies for sale</h1>
+            <p className="section-label">{cms?.sectionLabel || 'Existing UK companies'}</p>
+            <h1>{cms?.heroTitle || 'Companies for sale'}</h1>
             <p className="formation-hero-lead">
-              Ready-made UK companies. Identity checks are required before transfer. We are Companies
-              House and HMRC regulated (ACSP).
+              {cms?.heroLead ||
+                'Ready-made UK companies. Identity checks are required before transfer. We are Companies House and HMRC regulated (ACSP).'}
             </p>
             <div className="hero-actions" style={{ marginTop: 20 }}>
               <Link to="/buy" className="btn btn-outline-light btn-lg">

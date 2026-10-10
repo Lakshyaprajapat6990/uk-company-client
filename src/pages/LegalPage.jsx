@@ -3,23 +3,31 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import { getLegalPage } from '../data/legalPages.js'
 import usePageMeta from '../hooks/usePageMeta.js'
+import useWebsitePage from '../hooks/useWebsitePage.js'
 
 export default function LegalPage() {
   const { pathname } = useLocation()
   const slug = pathname.replace(/^\//, '')
-  const page = getLegalPage(slug)
+  const local = getLegalPage(slug)
+  const { page, content } = useWebsitePage(slug)
+
+  const title = page?.title || local?.title
+  const updated = content?.updated || local?.updated
+  const metaDescription = page?.metaDescription || local?.metaDescription
+  const sections = content?.sections?.length ? content.sections : local?.sections || []
 
   usePageMeta(
-    page ? `${page.title} | UK.company` : 'Legal | UK.company',
-    page?.metaDescription || 'Legal information for UK.company.',
-    page ? `/${page.slug}` : '/privacy'
+    title ? `${title} | UK.company` : 'Legal | UK.company',
+    metaDescription || 'Legal information for UK.company.',
+    title ? `/${slug}` : '/privacy'
   )
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [slug])
 
-  if (!page) return <Navigate to="/privacy" replace />
+  if (!local && !page) return <Navigate to="/privacy" replace />
+  if (!title) return <Navigate to="/privacy" replace />
 
   return (
     <>
@@ -31,11 +39,11 @@ export default function LegalPage() {
               <span aria-hidden="true">/</span>
               <span>Legal</span>
               <span aria-hidden="true">/</span>
-              <span>{page.title}</span>
+              <span>{title}</span>
             </nav>
             <p className="section-label">Legal</p>
-            <h1>{page.title}</h1>
-            <p className="formation-hero-lead">Last updated {page.updated}</p>
+            <h1>{title}</h1>
+            {updated ? <p className="formation-hero-lead">Last updated {updated}</p> : null}
           </Reveal>
         </div>
       </section>
@@ -44,10 +52,10 @@ export default function LegalPage() {
         <div className="container legal-layout">
           <Reveal variant="left">
             <article className="legal-article">
-              {page.sections.map((section) => (
+              {sections.map((section) => (
                 <section key={section.heading} className="legal-block">
                   <h2>{section.heading}</h2>
-                  {section.paragraphs.map((p) => (
+                  {(section.paragraphs || []).map((p) => (
                     <p key={p.slice(0, 48)}>{p}</p>
                   ))}
                 </section>

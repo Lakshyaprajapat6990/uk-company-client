@@ -5,6 +5,7 @@ import { informationGuides, nav } from '../data/content.js'
 import { keyProducts, productHubExtras } from '../data/keyProducts.js'
 import { useAuth } from '../lib/auth.jsx'
 import { useCart } from '../lib/cart.jsx'
+import { websiteApi } from '../lib/api.js'
 
 const PhoneIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -132,7 +133,9 @@ function MegaMenu({
   )
 }
 
-function KeyProductsMega({ onNavigate, onStayOpen, onLeave }) {
+function KeyProductsMega({ data, onNavigate, onStayOpen, onLeave }) {
+  const products = data?.products?.length ? data.products : keyProducts
+  const alsoLinks = data?.alsoLinks?.length ? data.alsoLinks : productHubExtras
   return (
     <div
       className="mega-panel mega-panel--key-products"
@@ -142,16 +145,19 @@ function KeyProductsMega({ onNavigate, onStayOpen, onLeave }) {
     >
       <div className="container key-products-inner">
         <div className="key-products-intro">
-          <p className="key-products-kicker">What we do</p>
-          <h3>Key Products</h3>
-          <p>Our core UK company services - formations, buy and sell, ID checks, mail, and VAT.</p>
+          <p className="key-products-kicker">{data?.kicker || 'What we do'}</p>
+          <h3>{data?.title || 'Key Products'}</h3>
+          <p>
+            {data?.lead ||
+              'Our core UK company services - formations, buy and sell, ID checks, mail, and VAT.'}
+          </p>
         </div>
         <ul className="key-products-grid">
-          {keyProducts.map((item) => (
-            <li key={item.id}>
-              {item.external ? (
+          {products.map((item) => (
+            <li key={item.id || item.to || item.title}>
+              {item.external || /^https?:\/\//i.test(item.href || item.to || '') ? (
                 <a
-                  href={item.href}
+                  href={item.href || item.to}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="key-product-card"
@@ -176,10 +182,10 @@ function KeyProductsMega({ onNavigate, onStayOpen, onLeave }) {
           ))}
         </ul>
         <div className="key-products-extras">
-          <p className="key-products-extras-label">Also</p>
+          <p className="key-products-extras-label">{data?.alsoLabel || 'Also'}</p>
           <ul className="key-products-extras-list">
-            {productHubExtras.map((item) => (
-              <li key={item.id}>
+            {alsoLinks.map((item) => (
+              <li key={item.id || item.to || item.title}>
                 <Link to={item.to} onClick={onNavigate}>
                   {item.title}
                 </Link>
@@ -196,11 +202,50 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [menu, setMenu] = useState(null)
   const [hoverLocked, setHoverLocked] = useState(false)
+  const [formationNav, setFormationNav] = useState(nav.companyFormations)
+  const [formationMenuMeta, setFormationMenuMeta] = useState({
+    image: '/london-skyline.jpg',
+    imageAlt: 'London skyline',
+  })
+  const [keyProductsMenu, setKeyProductsMenu] = useState(null)
+  const [informationNav, setInformationNav] = useState(informationGuides)
+  const [informationMenuMeta, setInformationMenuMeta] = useState({
+    image: '/london-skyline.jpg',
+    imageAlt: 'London skyline business district',
+  })
   const closeTimer = useRef(null)
   const location = useLocation()
   const { isAuthenticated, user } = useAuth()
   const { count } = useCart()
   const isStaff = user?.role === 'admin' || user?.role === 'super_admin'
+
+  useEffect(() => {
+    Promise.all([
+      websiteApi.get('nav-formations').catch(() => null),
+      websiteApi.get('nav-key-products').catch(() => null),
+      websiteApi.get('nav-information').catch(() => null),
+    ]).then(([formations, keyProductsPage, information]) => {
+      const fItems = formations?.page?.content?.items
+      if (Array.isArray(fItems) && fItems.length) {
+        setFormationNav(fItems.map((item) => ({ slug: item.slug, title: item.title })))
+        setFormationMenuMeta({
+          image: formations.page.content.image || '/london-skyline.jpg',
+          imageAlt: formations.page.content.imageAlt || 'London skyline',
+        })
+      }
+      if (keyProductsPage?.page?.content) {
+        setKeyProductsMenu(keyProductsPage.page.content)
+      }
+      const iItems = information?.page?.content?.items
+      if (Array.isArray(iItems) && iItems.length) {
+        setInformationNav(iItems.map((item) => ({ id: item.id, title: item.title })))
+        setInformationMenuMeta({
+          image: information.page.content.image || '/london-skyline.jpg',
+          imageAlt: information.page.content.imageAlt || 'London skyline business district',
+        })
+      }
+    })
+  }, [])
   const accountTo = !isAuthenticated ? '/login' : isStaff ? '/admin' : '/portal'
   const accountLabel = !isAuthenticated ? 'Account' : isStaff ? 'Admin' : 'Portal'
 
@@ -289,10 +334,10 @@ export default function Navbar() {
                 </button>
                 {menu === 'formations' ? (
                   <MegaMenu
-                    items={nav.companyFormations}
+                    items={formationNav}
                     slugRoutePrefix="formation"
-                    image="/london-skyline.jpg"
-                    imageAlt="London skyline"
+                    image={formationMenuMeta.image}
+                    imageAlt={formationMenuMeta.imageAlt}
                     onNavigate={closeAll}
                     onStayOpen={() => openMenu('formations')}
                     onLeave={scheduleClose}
@@ -318,6 +363,7 @@ export default function Navbar() {
                 </button>
                 {menu === 'key-products' ? (
                   <KeyProductsMega
+                    data={keyProductsMenu}
                     onNavigate={closeAll}
                     onStayOpen={() => openMenu('key-products')}
                     onLeave={scheduleClose}
@@ -343,10 +389,10 @@ export default function Navbar() {
                 </button>
                 {menu === 'information' ? (
                   <MegaMenu
-                    items={informationGuides}
+                    items={informationNav}
                     slugRoutePrefix="info"
-                    image="/london-skyline.jpg"
-                    imageAlt="London skyline business district"
+                    image={informationMenuMeta.image}
+                    imageAlt={informationMenuMeta.imageAlt}
                     linkPrefix="#info"
                     onNavigate={closeAll}
                     onStayOpen={() => openMenu('information')}
@@ -427,7 +473,7 @@ export default function Navbar() {
                 </span>
               </button>
               <ul className="dropdown">
-                {nav.companyFormations.map((item) => (
+                {formationNav.map((item) => (
                   <li key={item.slug}>
                     <Link to={`/formation/${item.slug}`} onClick={closeAll}>
                       {item.title}
@@ -444,19 +490,26 @@ export default function Navbar() {
                 </span>
               </button>
               <ul className="dropdown">
-                {keyProducts.map((item) => (
-                  <li key={item.id}>
-                    {item.external ? (
-                      <a href={item.href} target="_blank" rel="noopener noreferrer" onClick={closeAll}>
-                        {item.title}
-                      </a>
-                    ) : (
-                      <Link to={item.to} onClick={closeAll}>
-                        {item.title}
-                      </Link>
-                    )}
-                  </li>
-                ))}
+                {(keyProductsMenu?.products?.length ? keyProductsMenu.products : keyProducts).map(
+                  (item) => (
+                    <li key={item.id || item.to || item.title}>
+                      {item.external || /^https?:\/\//i.test(item.href || item.to || '') ? (
+                        <a
+                          href={item.href || item.to}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={closeAll}
+                        >
+                          {item.title}
+                        </a>
+                      ) : (
+                        <Link to={item.to} onClick={closeAll}>
+                          {item.title}
+                        </Link>
+                      )}
+                    </li>
+                  )
+                )}
               </ul>
             </li>
             <li className={`has-drop ${menu === 'information' ? 'active' : ''}`}>
@@ -467,7 +520,7 @@ export default function Navbar() {
                 </span>
               </button>
               <ul className="dropdown">
-                {informationGuides.map((item) => (
+                {informationNav.map((item) => (
                   <li key={item.id}>
                     <Link to={`/info/${item.id}`} onClick={closeAll}>
                       {item.title}

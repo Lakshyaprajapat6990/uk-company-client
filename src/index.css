@@ -7124,6 +7124,83 @@ img {
   }
 }
 
+.admin-website-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.admin-website-nav {
+  background: #fff;
+  border: 1px solid #dbe3f0;
+  border-radius: 12px;
+  padding: 12px;
+  max-height: min(70vh, 720px);
+  overflow: auto;
+  position: sticky;
+  top: 88px;
+}
+
+.admin-website-group + .admin-website-group {
+  margin-top: 14px;
+}
+
+.admin-website-group h3 {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.admin-website-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.admin-website-group button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--on-light-heading);
+  cursor: pointer;
+}
+
+.admin-website-group button:hover {
+  background: #f8fafc;
+}
+
+.admin-website-group button.is-active {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.admin-website-editor {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .admin-website-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-website-nav {
+    position: static;
+    max-height: 220px;
+  }
+}
+
 .admin-home-form {
   display: grid;
   gap: 22px;
@@ -7193,5 +7270,37 @@ img {
 @media (max-width: 900px) {
   .admin-home-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.edit-page-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 22px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.28);
+}
+
+.edit-page-fab:hover {
+  background: #1e40af;
+  color: #fff !important;
+}
+
+@media (max-width: 640px) {
+  .edit-page-fab {
+    right: 12px;
+    bottom: 16px;
+    padding: 10px 14px;
+    font-size: 0.86rem;
   }
 }

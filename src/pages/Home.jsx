@@ -6,7 +6,7 @@ import HeroBackground from '../components/HeroBackground.jsx'
 import { getFormationSlugByTitle } from '../data/formationPages.js'
 import { keyProducts, keyProductHeroExtras } from '../data/keyProducts.js'
 import { blogPosts } from '../data/blogPosts.js'
-import { homepageApi } from '../lib/api.js'
+import { homepageApi, websiteApi } from '../lib/api.js'
 import {
   agentBenefits,
   faqs as defaultFaqs,
@@ -117,12 +117,46 @@ export default function Home() {
   const serviceVariants = ['left', 'popup', 'right']
   const newsVariants = ['bottom', 'float', 'top']
 
+  const [keyProductsCms, setKeyProductsCms] = useState(null)
+  const [infoGuidesCms, setInfoGuidesCms] = useState(null)
+
   useEffect(() => {
     homepageApi
       .get()
       .then((data) => setCms(data.homepage || null))
       .catch(() => setCms(null))
+    websiteApi
+      .get('nav-key-products')
+      .then((data) => setKeyProductsCms(data.page?.content || null))
+      .catch(() => setKeyProductsCms(null))
+    websiteApi
+      .list()
+      .then(async (data) => {
+        const infoPages = (data.pages || []).filter((p) => p.group === 'information')
+        if (!infoPages.length) return
+        const details = await Promise.all(
+          infoPages.map((p) => websiteApi.get(p.slug).then((r) => r.page).catch(() => null))
+        )
+        setInfoGuidesCms(
+          details
+            .filter(Boolean)
+            .map((p) => ({
+              id: String(p.slug || '').replace(/^info-/, ''),
+              title: p.title,
+              text: p.content?.text || '',
+            }))
+        )
+      })
+      .catch(() => setInfoGuidesCms(null))
   }, [])
+
+  const liveKeyProducts = keyProductsCms?.products?.length
+    ? keyProductsCms.products
+    : keyProducts
+  const liveKeyExtras = keyProductsCms?.heroExtras?.length
+    ? keyProductsCms.heroExtras
+    : keyProductHeroExtras
+  const liveInfoGuides = infoGuidesCms?.length ? infoGuidesCms : informationGuides
 
   const hero = cms?.hero || {}
   const offersSection = cms?.offersSection || {}
@@ -146,11 +180,11 @@ export default function Home() {
         <div className="hero-key-points-wrap animate-in">
           <div className="container">
             <nav className="hero-key-points-row" aria-label="Key products">
-              {keyProducts.map((item) =>
-                item.external ? (
+              {liveKeyProducts.map((item) =>
+                item.external || /^https?:\/\//i.test(item.href || item.to || '') ? (
                   <a
-                    key={item.id}
-                    href={item.href}
+                    key={item.id || item.title}
+                    href={item.href || item.to}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hero-key-point-block"
@@ -159,7 +193,7 @@ export default function Home() {
                   </a>
                 ) : (
                   <Link
-                    key={item.id}
+                    key={item.id || item.title}
                     to={item.to}
                     className="hero-key-point-block"
                   >
@@ -169,8 +203,8 @@ export default function Home() {
               )}
             </nav>
             <nav className="hero-key-points-row hero-key-points-row--extras" aria-label="More key products">
-              {keyProductHeroExtras.map((item) => (
-                <Link key={item.id} to={item.to} className="hero-key-point-block">
+              {liveKeyExtras.map((item) => (
+                <Link key={item.id || item.title} to={item.to} className="hero-key-point-block">
                   <span>{item.title}</span>
                 </Link>
               ))}
@@ -560,7 +594,7 @@ export default function Home() {
             </p>
           </Reveal>
           <div className="info-grid">
-            {informationGuides.map((guide, i) => (
+            {liveInfoGuides.map((guide, i) => (
               <Reveal key={guide.id} delay={(i % 3) * 80} variant={i % 2 === 0 ? 'left' : 'right'}>
                 <article className="info-card" id={`info-${guide.id}`}>
                   <h3>{guide.title}</h3>

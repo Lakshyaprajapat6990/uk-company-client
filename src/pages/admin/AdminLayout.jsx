@@ -8,7 +8,7 @@ const TABS = [
   { to: '/admin/companies', label: 'Companies for sale', permission: 'companies' },
   { to: '/admin/users', label: 'Users', permission: 'users' },
   { to: '/admin/subscribers', label: 'Subscribers', permission: 'subscribers' },
-  { to: '/admin/homepage', label: 'Homepage', permission: 'homepage' },
+  { to: '/admin/website', label: 'Website', permission: 'website' },
   { to: '/admin/staff', label: 'Admins', superAdminOnly: true },
 ]
 

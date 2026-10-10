@@ -129,6 +129,12 @@ export const adminApi = {
   getHomepage: () => api('/admin/homepage'),
   saveHomepage: (body) => api('/admin/homepage', { method: 'PUT', body }),
   resetHomepage: () => api('/admin/homepage/reset', { method: 'POST' }),
+  listWebsitePages: () => api('/admin/website'),
+  getWebsitePage: (slug) => api(`/admin/website/${encodeURIComponent(slug)}`),
+  saveWebsitePage: (slug, body) =>
+    api(`/admin/website/${encodeURIComponent(slug)}`, { method: 'PUT', body }),
+  resetWebsitePage: (slug) =>
+    api(`/admin/website/${encodeURIComponent(slug)}/reset`, { method: 'POST' }),
   permissions: () => api('/admin/permissions'),
   staff: () => api('/admin/staff'),
   createStaff: (body) => api('/admin/staff', { method: 'POST', body }),
@@ -143,6 +149,11 @@ export const newsletterApi = {
 
 export const homepageApi = {
   get: () => api('/homepage'),
+}
+
+export const websiteApi = {
+  list: () => api('/website'),
+  get: (slug) => api(`/website/${encodeURIComponent(slug)}`),
 }
 
 export const PENDING_ORDER_KEY = 'uk_pending_order'

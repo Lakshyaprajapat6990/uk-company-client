@@ -1,6 +1,8 @@
 import Reveal from '../components/Reveal.jsx'
 import { Navigate, Link, useParams } from 'react-router-dom'
 import { informationGuides } from '../data/content.js'
+import useWebsitePage from '../hooks/useWebsitePage.js'
+import usePageMeta from '../hooks/usePageMeta.js'
 
 const Arrow = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -11,8 +13,25 @@ const Arrow = () => (
 export default function InfoPage() {
   const { slug } = useParams()
   const guide = informationGuides.find((g) => g.id === slug)
+  const { page, content, loading } = useWebsitePage(slug ? `info-${slug}` : '')
 
-  if (!guide) return <Navigate to="/" replace />
+  const title = page?.title || guide?.title
+  const text = content?.text || guide?.text || ''
+  const helpTitle = content?.helpTitle || 'Need help?'
+  const helpText =
+    content?.helpText ||
+    "If you want a company formation agent to handle the process and related admin for you, contact us and we'll guide you through the next steps."
+  const helpCtaLabel = content?.helpCtaLabel || 'Get in touch'
+  const helpCtaTo = content?.helpCtaTo || '/contact'
+
+  usePageMeta(
+    title ? `${title} | UK.company` : 'Information | UK.company',
+    text || 'UK.company information guide.',
+    slug ? `/info/${slug}` : '/info'
+  )
+
+  if (!guide && !page && !loading) return <Navigate to="/" replace />
+  if (!title && !loading) return <Navigate to="/" replace />
 
   return (
     <>
@@ -24,11 +43,11 @@ export default function InfoPage() {
               <span aria-hidden="true">/</span>
               <span>Information</span>
               <span aria-hidden="true">/</span>
-              <span>{guide.title}</span>
+              <span>{title}</span>
             </nav>
             <p className="section-label">Information</p>
-            <h1>{guide.title}</h1>
-            <p className="formation-hero-lead">{guide.text}</p>
+            <h1>{title}</h1>
+            <p className="formation-hero-lead">{text}</p>
           </Reveal>
         </div>
       </section>
@@ -38,21 +57,18 @@ export default function InfoPage() {
           <Reveal variant="bottom">
             <div className="formation-content-block">
               <h2>About this guide</h2>
-              <p>{guide.text}</p>
+              <p>{text}</p>
             </div>
           </Reveal>
 
           <Reveal delay={80} variant="bottom">
             <div className="formation-cta-inner formation-content-block">
-              <h2>Need help?</h2>
-              <p>
-                If you want a company formation agent to handle the process and related admin for you, contact
-                us and we&apos;ll guide you through the next steps.
-              </p>
+              <h2>{helpTitle}</h2>
+              <p>{helpText}</p>
               <div className="hero-actions">
-                <a href="/contact" className="btn btn-primary btn-lg">
-                  Get in touch <Arrow />
-                </a>
+                <Link to={helpCtaTo} className="btn btn-primary btn-lg">
+                  {helpCtaLabel} <Arrow />
+                </Link>
                 <Link to="/#services" className="btn btn-outline btn-lg">
                   View services <Arrow />
                 </Link>
@@ -64,4 +80,3 @@ export default function InfoPage() {
     </>
   )
 }
-
